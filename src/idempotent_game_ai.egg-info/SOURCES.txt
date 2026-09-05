@@ -1,0 +1,15 @@
+LICENSE
+README.md
+pyproject.toml
+src/idempotent_game_ai/__init__.py
+src/idempotent_game_ai/cli.py
+src/idempotent_game_ai/dialogue_memory.py
+src/idempotent_game_ai/npc_planner.py
+src/idempotent_game_ai/swarm_simulator.py
+src/idempotent_game_ai.egg-info/PKG-INFO
+src/idempotent_game_ai.egg-info/SOURCES.txt
+src/idempotent_game_ai.egg-info/dependency_links.txt
+src/idempotent_game_ai.egg-info/entry_points.txt
+src/idempotent_game_ai.egg-info/requires.txt
+src/idempotent_game_ai.egg-info/top_level.txt
+tests/test_game_ai.py

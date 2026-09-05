@@ -1,0 +1,2 @@
+[console_scripts]
+idemnpc = idempotent_game_ai.cli:main

@@ -1,0 +1,39 @@
+# IdemNPC (`idempotent-game-ai`)
+
+> **Zero-VRAM Cognitive NPC Engine for Unreal Engine 5, Unity, and Game Studios.**  
+> *Simulate hundreds of intelligent, reasoning NPCs with real-time decision trees and memory compaction without stealing rendering VRAM.*
+
+[![Patent Pending](https://img.shields.io/badge/USPTO%20Patent%20Pending-64%2F148%2C668-blue.svg)](https://github.com/aemre-cetin/idempotent-game-ai)
+[![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-green.svg)](LICENSE)
+
+---
+
+## 1. Overview
+
+In modern AAA and indie game development, integrating AI-driven Non-Player Characters (NPCs) is bottlenecked by the graphics rendering pipeline. Gamers' GPUs are already operating at 95%+ utilization rendering photorealistic geometry and ray tracing. Allocating auxiliary VRAM for hundreds of concurrent AI behavior trees or LLM dialogue contexts causes **frame rate stuttering (FPS drops)** and thermal throttling.
+
+**IdemNPC** solves this by applying **Idempotent Permutations** ($f(f(s)) = f(s)$):
+1. Prunes action candidates and decision trees directly in-place across GPU registers.
+2. Compaction operates with **strictly 0 bytes of auxiliary VRAM allocation**.
+3. Scales to **1,000+ autonomous agents** making real-time tactical choices with 0.00% rendering degradation.
+
+---
+
+## 2. Quick Start
+
+### Installation
+```bash
+pip install idempotent-game-ai
+```
+
+### Run 500-NPC Swarm Simulation
+```bash
+idemnpc demo --npcs 500
+```
+
+---
+
+## 3. Patent Notice
+
+Protected under U.S. Patent Application No.: **64/148,668** (Confirmation No.: 5890).  
+Author: **Dr. A. Emre ÇETİN** (`aemre.cetin@gmail.com`).

@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "idempotent-game-ai"
+version = "0.1.0"
+authors = [
+  { name="Dr. A. Emre ÇETİN", email="aemre.cetin@gmail.com" },
+]
+description = "IdemNPC: Zero-VRAM Cognitive NPC Engine for Unity, Unreal, and Game Studios."
+readme = "README.md"
+requires-python = ">=3.9"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: Other/Proprietary License",
+    "Operating System :: OS Independent",
+    "Topic :: Games/Entertainment :: Simulation",
+]
+dependencies = [
+    "torch>=2.0.0",
+]
+
+[project.scripts]
+idemnpc = "idempotent_game_ai.cli:main"
+
+[project.urls]
+"Homepage" = "https://github.com/aemre-cetin/idempotent-game-ai"
+"Patent Notice" = "https://github.com/aemre-cetin/idempotent-game-ai#patent-notice"
