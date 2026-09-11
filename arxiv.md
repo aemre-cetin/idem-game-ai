@@ -5,7 +5,7 @@
 - **Authors:** Dr. A. Emre ÇETİN (aemre.cetin@gmail.com)
 - **Primary Category:** `cs.AI` (Artificial Intelligence)
 - **Secondary Categories:** `cs.GR` (Graphics), `cs.DC` (Distributed, Parallel, and Cluster Computing), `cs.PF` (Performance)
-- **Comments:** 3 pages, 2 figures. Reference implementation available at https://github.com/aemre-cetin/idempotent-game-ai. Protected under U.S. Patent Application No. 64/148,668.
+- **Comments:** 3 pages, 2 figures. Reference implementation available at https://github.com/aemre-cetin/idem-game-ai. Protected under U.S. Patent Application No. 64/148,668.
 - **Archive Package:** `paper/arxiv_package_idempotent_game_ai.tar.gz`
 
 ### Abstract:

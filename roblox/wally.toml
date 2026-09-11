@@ -1,0 +1,11 @@
+[package]
+name = "aemre-cetin/idemnpc-luau"
+version = "0.1.0"
+registry = "https://github.com/UpliftGames/wally-index"
+realm = "shared"
+description = "Zero-GC In-Place AI Compactor and 5,000+ Swarm Engine for Roblox. Eliminates server lag and GC ping spikes."
+license = "Apache-2.0"
+authors = ["Dr. A. Emre ÇETİN <aemre.cetin@gmail.com>"]
+
+[dependencies]
+

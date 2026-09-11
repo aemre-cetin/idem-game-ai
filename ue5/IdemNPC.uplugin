@@ -1,0 +1,33 @@
+{
+	"FileVersion": 3,
+	"Version": 1,
+	"VersionName": "0.1.0",
+	"FriendlyName": "IdemNPC - Zero-VRAM In-Place AI Compactor",
+	"Description": "In-situ idempotent permutation and zero-allocation decision compactor for massive NPC crowds, Mass Entity, and AI behavior trees.",
+	"Category": "AI",
+	"CreatedBy": "Dr. A. Emre ÇETİN",
+	"CreatedByURL": "https://github.com/aemre-cetin/idempotent-game-ai",
+	"DocsURL": "https://github.com/aemre-cetin/idempotent-game-ai",
+	"MarketplaceURL": "",
+	"SupportURL": "mailto:aemre.cetin@gmail.com",
+	"EngineVersion": "5.4.0",
+	"CanContainContent": false,
+	"IsBetaVersion": false,
+	"IsExperimentalVersion": false,
+	"Installed": false,
+	"Modules": [
+		{
+			"Name": "IdemNPC",
+			"Type": "Runtime",
+			"LoadingPhase": "Default",
+			"PlatformAllowList": [
+				"Win64",
+				"Mac",
+				"Linux",
+				"Android",
+				"IOS"
+			]
+		}
+	]
+}
+

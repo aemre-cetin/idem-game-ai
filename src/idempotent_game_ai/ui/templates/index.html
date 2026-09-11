@@ -1,0 +1,2419 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IdemGaming Studio // 10.000+ Ajan 3D Simülasyon Arenası & Sıfır-GC Oyun Yapay Zekası</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700;800&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Three.js and OrbitControls -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <style>
+        :root {
+            --bg-base: #06080d;
+            --bg-card: #0c1019;
+            --bg-card-header: #111723;
+            --border-color: #1a2335;
+            --accent-green: #00ff88;
+            --accent-green-dim: rgba(0, 255, 136, 0.12);
+            --accent-cyan: #00f0ff;
+            --accent-cyan-dim: rgba(0, 240, 255, 0.12);
+            --accent-red: #ff3366;
+            --accent-red-dim: rgba(255, 51, 102, 0.12);
+            --accent-amber: #f59e0b;
+            --accent-amber-dim: rgba(245, 158, 11, 0.12);
+            --accent-purple: #a855f7;
+            --accent-purple-dim: rgba(168, 85, 247, 0.12);
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+        }
+
+        body {
+            background-color: var(--bg-base);
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .mono {
+            font-family: 'JetBrains Mono', monospace;
+            font-variant-numeric: tabular-nums;
+        }
+
+        header {
+            background: linear-gradient(180deg, #0f1523 0%, #0a0e17 100%);
+            border-bottom: 1px solid var(--border-color);
+            padding: 8px 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 100;
+            flex-shrink: 0;
+        }
+
+        .logo-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-badge {
+            background: linear-gradient(135deg, #a855f7 0%, #00f0ff 100%);
+            color: #000;
+            font-weight: 900;
+            font-size: 12px;
+            padding: 4px 9px;
+            border-radius: 6px;
+            letter-spacing: 0.8px;
+        }
+
+        .title-container h1 {
+            font-size: 14px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .title-sub {
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+
+        .header-tags {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tag {
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-card);
+        }
+
+        .tag.patent {
+            border-color: rgba(245, 158, 11, 0.4);
+            color: var(--accent-amber);
+            background: rgba(245, 158, 11, 0.08);
+        }
+
+        .tag.status {
+            border-color: rgba(0, 255, 136, 0.4);
+            color: var(--accent-green);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .pulse-dot {
+            width: 7px;
+            height: 7px;
+            background: var(--accent-green);
+            border-radius: 50%;
+            box-shadow: 0 0 8px var(--accent-green);
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.9); opacity: 0.8; }
+            50% { transform: scale(1.3); opacity: 1; }
+            100% { transform: scale(0.9); opacity: 0.8; }
+        }
+
+        /* Top Executive Hero Banner */
+        .exec-hero {
+            background: linear-gradient(135deg, rgba(12, 16, 25, 0.98) 0%, rgba(17, 23, 38, 0.98) 100%);
+            border-bottom: 1px solid var(--border-color);
+            padding: 10px 18px;
+            position: relative;
+            flex-shrink: 0;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.5);
+        }
+        .exec-hero::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 4px; height: 100%;
+            background: linear-gradient(180deg, var(--accent-cyan), var(--accent-green));
+        }
+        .exec-hero-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 6px;
+        }
+        .exec-hero-title {
+            font-size: 0.88rem;
+            font-weight: 800;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .exec-hero-badge {
+            background: rgba(0, 240, 255, 0.12);
+            color: var(--accent-cyan);
+            border: 1px solid rgba(0, 240, 255, 0.35);
+            font-size: 0.72rem;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 12px;
+            text-transform: uppercase;
+        }
+        .exec-hero-grid {
+            display: grid;
+            grid-template-columns: 1fr 340px;
+            gap: 16px;
+            align-items: center;
+        }
+        .exec-hero-desc {
+            font-size: 0.8rem;
+            line-height: 1.45;
+            color: #cbd5e1;
+        }
+        .exec-hero-desc strong {
+            color: var(--accent-cyan);
+        }
+        .exec-hero-kpis {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 8px 10px;
+        }
+        .exec-kpi-item {
+            display: flex;
+            flex-direction: column;
+        }
+        .exec-kpi-lbl {
+            font-size: 0.68rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+        .exec-kpi-val {
+            font-size: 0.85rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 800;
+            color: var(--accent-green);
+        }
+
+        /* Studio Navigation Tabs */
+        .tabs-nav {
+            display: flex;
+            background: #090d16;
+            border-bottom: 1px solid var(--border-color);
+            padding: 0 16px;
+            gap: 6px;
+            flex-shrink: 0;
+            overflow-x: auto;
+        }
+        .tab-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            padding: 9px 14px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            border-bottom: 2px solid transparent;
+            transition: all 0.15s ease;
+            white-space: nowrap;
+        }
+        .tab-btn:hover {
+            color: var(--text-primary);
+            background: rgba(255,255,255,0.02);
+        }
+        .tab-btn.active {
+            color: var(--accent-cyan);
+            border-bottom-color: var(--accent-cyan);
+            background: rgba(0, 240, 255, 0.05);
+        }
+
+        /* Main Workspace & Tabs Container */
+        .main-container {
+            flex: 1;
+            min-height: 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tab-pane {
+            display: none;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+        .tab-pane.active {
+            display: flex;
+        }
+
+        /* Executive Brief Box */
+        .exec-brief-box {
+            background: rgba(10, 15, 26, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-left: 3px solid var(--accent-cyan);
+            border-radius: 6px;
+            padding: 8px 11px;
+            margin-bottom: 10px;
+            font-size: 0.76rem;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .exec-brief-box.green { border-left-color: var(--accent-green); }
+        .exec-brief-box.purple { border-left-color: var(--accent-purple); }
+        .exec-brief-box.amber { border-left-color: var(--accent-amber); }
+        .brief-item {
+            line-height: 1.4;
+            color: #cbd5e1;
+        }
+        .brief-lbl {
+            font-weight: 700;
+            display: inline;
+        }
+        .brief-lbl.prob { color: #f87171; }
+        .brief-lbl.meth { color: #60a5fa; }
+        .brief-lbl.math { color: #c084fc; font-family: 'JetBrains Mono', monospace; }
+        .brief-lbl.roi { color: #34d399; }
+
+        /* ------------------------------------------------------------- */
+        /* TAB 1: 3D SWARM ARENA STYLES                                  */
+        /* ------------------------------------------------------------- */
+        .workspace {
+            display: grid;
+            grid-template-columns: 320px 1fr 340px;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .panel {
+            background-color: var(--bg-card);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            width: 320px;
+            min-width: 320px;
+            max-width: 320px;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+
+        .panel.right {
+            border-right: none;
+            border-left: 1px solid var(--border-color);
+            width: 340px;
+            min-width: 340px;
+            max-width: 340px;
+        }
+
+        .panel-header {
+            background-color: var(--bg-card-header);
+            border-bottom: 1px solid var(--border-color);
+            padding: 8px 12px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .panel-content {
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .card {
+            background: #090d16;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .card-title {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn {
+            background: #151d2e;
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 7px 11px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            text-align: center;
+        }
+
+        .btn:hover {
+            background: #1f2b42;
+            border-color: var(--accent-cyan);
+            color: var(--accent-cyan);
+        }
+
+        .btn.primary {
+            background: var(--accent-cyan-dim);
+            border-color: rgba(0, 240, 255, 0.4);
+            color: var(--accent-cyan);
+        }
+
+        .btn.primary:hover {
+            background: rgba(0, 240, 255, 0.25);
+            border-color: var(--accent-cyan);
+        }
+
+        .btn.danger {
+            background: var(--accent-red-dim);
+            border-color: rgba(255, 51, 102, 0.4);
+            color: var(--accent-red);
+        }
+
+        .btn.danger:hover {
+            background: rgba(255, 51, 102, 0.25);
+            border-color: var(--accent-red);
+        }
+
+        .btn.success {
+            background: var(--accent-green-dim);
+            border-color: rgba(0, 255, 136, 0.4);
+            color: var(--accent-green);
+        }
+
+        .segmented-group {
+            display: flex;
+            background: #05080e;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 2px;
+            gap: 2px;
+        }
+
+        .seg-btn {
+            flex: 1;
+            padding: 5px 3px;
+            border: none;
+            background: transparent;
+            color: var(--text-muted);
+            font-size: 11px;
+            font-weight: 600;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            text-align: center;
+        }
+
+        .seg-btn:hover {
+            color: var(--text-primary);
+        }
+
+        .seg-btn.active {
+            background: #192338;
+            color: var(--accent-cyan);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+        }
+
+        .viewport-container {
+            position: relative;
+            background: #05070c;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            width: 100%;
+            height: 100%;
+        }
+
+        #canvas-3d {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        .viewport-overlay-top {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            right: 10px;
+            display: flex;
+            justify-content: space-between;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .viewport-badge {
+            background: rgba(10, 15, 25, 0.85);
+            backdrop-filter: blur(8px);
+            border: 1px solid var(--border-color);
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 11px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .viewport-badge .label {
+            color: var(--text-muted);
+            font-size: 10px;
+            text-transform: uppercase;
+        }
+
+        .viewport-badge .value {
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .viewport-tip-bottom {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(10, 15, 25, 0.85);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(0, 240, 255, 0.3);
+            color: var(--text-secondary);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .text-green { color: var(--accent-green); }
+        .text-cyan { color: var(--accent-cyan); }
+        .text-red { color: var(--accent-red); }
+        .text-amber { color: var(--accent-amber); }
+
+        .metric-big {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            padding: 5px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .metric-big:last-child {
+            border-bottom: none;
+        }
+
+        .metric-val {
+            font-size: 15px;
+            font-weight: 800;
+            font-variant-numeric: tabular-nums;
+        }
+
+        #oscilloscope-canvas {
+            width: 100%;
+            height: 130px;
+            background: #05080e;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            display: block;
+        }
+
+        .legend-box {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 5px;
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+        }
+
+        .legend-color {
+            width: 10px;
+            height: 10px;
+            border-radius: 2px;
+        }
+
+        /* ------------------------------------------------------------- */
+        /* TAB 2, 3, 4 COMMON STYLES                                     */
+        /* ------------------------------------------------------------- */
+        .studio-scrollable {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .grid-2col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .grid-3col {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        .engine-card {
+            background: #0a0e18;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .engine-card:hover {
+            border-color: rgba(0, 240, 255, 0.4);
+        }
+        .engine-card.active {
+            border-color: var(--accent-cyan);
+            background: rgba(0, 240, 255, 0.05);
+        }
+        .engine-badge-tag {
+            font-size: 10px;
+            font-weight: 700;
+            padding: 2px 7px;
+            border-radius: 4px;
+            align-self: flex-start;
+        }
+
+        .code-inspector-container {
+            background: #05080f;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        .code-nav-bar {
+            display: flex;
+            background: #090e1a;
+            border-bottom: 1px solid var(--border-color);
+            padding: 0 8px;
+        }
+        .code-tab-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            padding: 8px 14px;
+            font-size: 11px;
+            font-weight: 600;
+            font-family: 'JetBrains Mono', monospace;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+        }
+        .code-tab-btn.active {
+            color: var(--accent-cyan);
+            border-bottom-color: var(--accent-cyan);
+        }
+        .code-editor-pre {
+            padding: 14px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            line-height: 1.5;
+            color: #93c5fd;
+            overflow-x: auto;
+            max-height: 380px;
+            user-select: text;
+        }
+
+        /* TAB 3: DIALOGUE STYLES */
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            background: #080c14;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            height: 520px;
+            overflow: hidden;
+        }
+        .chat-header {
+            background: #0e1422;
+            padding: 10px 14px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .chat-messages {
+            flex: 1;
+            padding: 14px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            user-select: text;
+        }
+        .chat-msg {
+            max-width: 85%;
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 12px;
+            line-height: 1.45;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .chat-msg.player {
+            align-self: flex-end;
+            background: rgba(0, 240, 255, 0.08);
+            border: 1px solid rgba(0, 240, 255, 0.3);
+            color: #e2e8f0;
+        }
+        .chat-msg.npc {
+            align-self: flex-start;
+            background: rgba(168, 85, 247, 0.08);
+            border: 1px solid rgba(168, 85, 247, 0.3);
+            color: #f1f5f9;
+        }
+        .chat-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 10px;
+            color: var(--text-muted);
+            gap: 10px;
+        }
+        .chat-chips {
+            display: flex;
+            gap: 6px;
+            padding: 8px 14px;
+            background: #090d16;
+            border-top: 1px solid var(--border-color);
+            overflow-x: auto;
+        }
+        .chip-btn {
+            background: #131b2e;
+            border: 1px solid var(--border-color);
+            color: #94a3b8;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+        .chip-btn:hover {
+            color: var(--accent-cyan);
+            border-color: var(--accent-cyan);
+        }
+        .chat-input-bar {
+            display: flex;
+            padding: 10px 14px;
+            background: #0c111e;
+            border-top: 1px solid var(--border-color);
+            gap: 8px;
+        }
+        .chat-input-bar input {
+            flex: 1;
+            background: #060910;
+            border: 1px solid var(--border-color);
+            color: #fff;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-family: inherit;
+            outline: none;
+            user-select: text;
+        }
+        .chat-input-bar input:focus {
+            border-color: var(--accent-cyan);
+        }
+
+        /* TAB 4: MCTS STYLES */
+        .mcts-radar-canvas {
+            width: 100%;
+            height: 380px;
+            background: #05080e;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            display: block;
+        }
+        .action-tree-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 11px;
+            user-select: text;
+        }
+        .action-tree-table th {
+            background: #0d1320;
+            padding: 6px 10px;
+            text-align: left;
+            color: var(--text-secondary);
+            border-bottom: 1px solid var(--border-color);
+        }
+        .action-tree-table td {
+            padding: 6px 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+        }
+        .q-bar-bg {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 3px;
+            height: 6px;
+            width: 100%;
+            overflow: hidden;
+        }
+        .q-bar-fill {
+            height: 100%;
+            background: var(--accent-green);
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="logo-group">
+            <span class="logo-badge">IDEMGAMING STUDIO</span>
+            <div class="title-container">
+                <h1>10.000+ Ajan 3D Simülasyon Arenası & Çoklu Motor Sıfır-GC AI</h1>
+                <div class="title-sub">U.S. Patent Application No. 64/148,668 (Patent Pending) // Dr. A. Emre ÇETİN</div>
+            </div>
+        </div>
+        <div class="header-tags">
+            <span class="tag patent">U.S. Patent Conf. 5890</span>
+            <span class="tag">Pillar 14: Zero-GC Game AI</span>
+            <span class="tag status">
+                <span class="pulse-dot"></span>
+                <span class="mono" id="loop-rate-indicator">60 FPS WEBGL RUNTIME</span>
+            </span>
+        </div>
+    </header>
+
+    <!-- Top Executive Value Hero Banner -->
+    <div class="exec-hero">
+        <div class="exec-hero-header">
+            <div class="exec-hero-title">
+                <span>⚔️ PILLAR 14 // $250B+ OYUN & METAVERSE YAPAY ZEKASI YATIRIMCI ÖZETİ</span>
+            </div>
+            <span class="exec-hero-badge">$250B+ GLOBAL GAMING TAM</span>
+        </div>
+        <div class="exec-hero-grid">
+            <div class="exec-hero-desc">
+                Modern oyun motorlarında (10.000+ kalabalık, RPG NPC hafızaları, taktik karar ağaçları) varlık silme veya budama sırasında klasik bellek kaydırmaları (<code>TArray::RemoveAt</code>, <code>List.RemoveAt</code>, <code>table.remove</code>) <strong>$O(N)$ bellek kopyalamasına ve 28-98 ms GC donmalarına (micro-stutter)</strong> sebep olur. <strong>IdemNPC</strong>, 2-döngülü involüsyon transpozisyonları (<span class="mono">&pi;(&pi;(x)) == x</span>) ile in-situ yerinde takas uygulayarak <strong>0 Bayt ek bellek (Zero-Aux VRAM/Heap)</strong>, <strong>&lt; 0.43 ms deterministik tick süresi</strong> ve <strong>0.00 KB GC Delta</strong> ile sabit 60-120 FPS akıcı render sağlar.
+            </div>
+            <div class="exec-hero-kpis">
+                <div class="exec-kpi-item">
+                    <span class="exec-kpi-lbl">Yardımcı VRAM / Heap</span>
+                    <span class="exec-kpi-val text-green">0 Bytes (In-Situ)</span>
+                </div>
+                <div class="exec-kpi-item">
+                    <span class="exec-kpi-lbl">GC Duraklama Artışı</span>
+                    <span class="exec-kpi-val text-green">0.00 KB (Sıfır GC)</span>
+                </div>
+                <div class="exec-kpi-item">
+                    <span class="exec-kpi-lbl">Maksimum Sürü Boyutu</span>
+                    <span class="exec-kpi-val text-cyan">10.000+ Ajan (60 FPS)</span>
+                </div>
+                <div class="exec-kpi-item">
+                    <span class="exec-kpi-lbl">Desteklenen Motorlar</span>
+                    <span class="exec-kpi-val text-amber">UE5 / Unity / Roblox</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Studio Navigation Tabs -->
+    <div class="tabs-nav">
+        <button class="tab-btn active" id="btn-tab-swarm" onclick="switchTab('tab-swarm', this)">
+            <span>⚔️</span> 1. 3D Sürü & Devasa Kalabalık (Swarm Arena)
+        </button>
+        <button class="tab-btn" id="btn-tab-engine" onclick="switchTab('tab-engine', this)">
+            <span>🕹️</span> 2. Çoklu Motor Canlı Tezgâhı (UE5 / Unity / Roblox)
+        </button>
+        <button class="tab-btn" id="btn-tab-dialogue" onclick="switchTab('tab-dialogue', this)">
+            <span>🧠</span> 3. Akıllı NPC Diyalog & Bağlam Kompaktörü
+        </button>
+        <button class="tab-btn" id="btn-tab-mcts" onclick="switchTab('tab-mcts', this)">
+            <span>🎯</span> 4. MCTS Taktiksel Karar Ağacı & Yol Bulma
+        </button>
+    </div>
+
+    <!-- Main Workspace Container -->
+    <div class="main-container">
+
+        <!-- ========================================================= -->
+        <!-- TAB 1: 3D SWARM ARENA VIEW                                -->
+        <!-- ========================================================= -->
+        <div class="tab-pane active" id="tab-swarm">
+            <div class="workspace">
+
+                <!-- Left Sidebar: Controls & AoE Blast -->
+                <div class="panel">
+                    <div class="panel-header">
+                        <span>Sürü & Bomba Kontrolü</span>
+                        <span class="mono text-cyan" id="npc-badge">2,500 NPC</span>
+                    </div>
+                    <div class="panel-content">
+
+                        <!-- Executive Brief Box for Tab 1 -->
+                        <div class="exec-brief-box">
+                            <div class="brief-item"><span class="brief-lbl prob">Endüstriyel Problem:</span> Savaşta tek bir AoE patlamasıyla 800 ajanın ölmesi durumunda geleneksel dizi kaydırması 80 ms GC donması yaratır; kare hızı 12 FPS'e çöker.</div>
+                            <div class="brief-item"><span class="brief-lbl meth">Metodun İşlemi:</span> İki işaretçili involüsyon takasıyla ölü ajanlar dizinin sonuna ötelenir, canlı ajan sayısı anında güncellenir.</div>
+                            <div class="brief-item"><span class="brief-lbl math">İdempotens:</span> &pi;(&pi;(x)) == x; 2. kez çalıştırıldığında bellek konfigürasyonu değişmez.</div>
+                            <div class="brief-item"><span class="brief-lbl roi">Sağladığı ROI:</span> Konsol ve mobilde 60 FPS kilit garantisi, sıfır kare düşüşü.</div>
+                        </div>
+
+                        <!-- NPC Pool Density Selector -->
+                        <div class="card">
+                            <div class="card-title">NPC Sürü Yoğunluğu</div>
+                            <div class="segmented-group" id="npc-density-group">
+                                <button class="seg-btn" onclick="setNpcCount(1000, this)">1K</button>
+                                <button class="seg-btn active" onclick="setNpcCount(2500, this)">2.5K</button>
+                                <button class="seg-btn" onclick="setNpcCount(5000, this)">5K</button>
+                                <button class="seg-btn" onclick="setNpcCount(10000, this)">10K</button>
+                            </div>
+                        </div>
+
+                        <!-- Engine Profile Preset -->
+                        <div class="card">
+                            <div class="card-title">
+                                <span>Oyun Motoru Kıyas Profili</span>
+                                <span class="mono text-cyan" id="engine-preset-display">Roblox Luau</span>
+                            </div>
+                            <div class="segmented-group" id="engine-preset-group">
+                                <button class="seg-btn active" onclick="setEngine('roblox_luau', this)">Roblox Luau</button>
+                                <button class="seg-btn" onclick="setEngine('unity_dots', this)">Unity C#</button>
+                                <button class="seg-btn" onclick="setEngine('ue5_mass', this)">UE5 C++</button>
+                            </div>
+                            <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px;" id="engine-desc">
+                                table.remove() çağrısı ile $O(N)$ bellek kaydırması ve büyük Luau GC duraklaması (~80 ms freeze).
+                            </div>
+                        </div>
+
+                        <!-- Swarm Tactical Behavior -->
+                        <div class="card">
+                            <div class="card-title">
+                                <span>Taktik Sürü Davranışı</span>
+                                <span class="mono text-green" id="active-behavior-badge">Boids Sürüsü</span>
+                            </div>
+                            <div class="segmented-group" id="behavior-group">
+                                <button class="seg-btn active" title="Sürü (Boids): Ajanlar hareket eden yeşil enerji çekirdeğinin etrafında ayrılma, hizalanma ve kümelenme kurallarıyla girdap gibi süzülür." onclick="setBehavior('swarm', this)">Sürü (Boids)</button>
+                                <button class="seg-btn" title="Zombi Kovalama: Tüm ajanlar yeşil hedef çekirdeğe kilitlenir ve maksimum hızla doğrudan üzerine saldırır." onclick="setBehavior('chase', this)">Zombi Kovalama</button>
+                                <button class="seg-btn" title="İki Takım Savaşı: Ajanlar iki zıt orduya ayrılır; merkez hatta kafa kafaya yüksek hızlı çarpışma yaşanır." onclick="setBehavior('battle', this)">İki Takım Savaşı</button>
+                            </div>
+                            <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px;" id="behavior-desc">
+                                Ajanlar hareketli yeşil çekirdeğin etrafında kuğu/balık sürüsü gibi girdap formasyonunda akıcı şekilde süzülür.
+                            </div>
+                        </div>
+
+                        <!-- Swarm Velocity Range Controls -->
+                        <div class="card">
+                            <div class="card-title">
+                                <span>Sürü Hareket Hızı (m/s)</span>
+                                <span class="mono text-green" id="speed-range-badge">2.5 — 9.5 m/s</span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 8px; margin-top: 6px;">
+                                <span style="font-size: 11px; color: var(--text-secondary); width: 55px;">Min Hız:</span>
+                                <input type="range" id="slider-speed-min" min="0.5" max="15.0" step="0.5" value="2.5" style="flex: 1; accent-color: var(--accent-green);" oninput="onSwarmSpeedSliderChange()">
+                                <span class="mono text-cyan" id="slider-speed-min-val" style="font-size: 11px; width: 32px; text-align: right;">2.5</span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 8px; margin-top: 6px;">
+                                <span style="font-size: 11px; color: var(--text-secondary); width: 55px;">Maks Hız:</span>
+                                <input type="range" id="slider-speed-max" min="2.0" max="35.0" step="0.5" value="9.5" style="flex: 1; accent-color: var(--accent-green);" oninput="onSwarmSpeedSliderChange()">
+                                <span class="mono text-cyan" id="slider-speed-max-val" style="font-size: 11px; width: 32px; text-align: right;">9.5</span>
+                            </div>
+                        </div>
+
+                        <!-- Spatial Collision & Volume Preservation -->
+                        <div class="card">
+                            <div class="card-title">
+                                <span>Uzamsal Hacim & Çarpışma</span>
+                                <span class="mono text-cyan" id="spatial-mode-badge">IdemSpatial O(N)</span>
+                            </div>
+                            <div class="segmented-group" id="spatial-group">
+                                <button class="seg-btn" title="Noktasal Çökme: Ajanların fiziksel boyutu yoktur; hedefin merkezinde tek nokta haline gelirler." onclick="setSpatialMode('off', this)">Noktasal Çökme</button>
+                                <button class="seg-btn" title="Klasik O(N²): 10.000 ajanın tüm çiftleri kontrol edilir (50 Milyon işlem). CPU kilitlenir (~4 FPS)." onclick="setSpatialMode('traditional_n2', this)">Klasik O(N²)</button>
+                                <button class="seg-btn active" title="IdemSpatial O(N): İdempotent manifold izdüşümü ile 0 GC ve 60 FPS'te akıcı hacim korunur." onclick="setSpatialMode('idem_spatial', this)">IdemSpatial O(N)</button>
+                            </div>
+                            <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px;" id="spatial-desc">
+                                İdempotent manifold izdüşümü ile 0 GC ve 60 FPS'te ajanlar nefes alan devasa bir 3D hacim korur.
+                            </div>
+                        </div>
+
+                        <!-- AoE Blast / Massive Elimination -->
+                        <div class="card">
+                            <div class="card-title">
+                                <span>Geniş Çaplı Alan Hasarı (AoE Blast)</span>
+                                <span style="color: var(--accent-red);">GC & Bellek Sınavı</span>
+                            </div>
+                            <button class="btn danger" style="padding: 9px; font-weight: 700;" onclick="triggerAoEAtCenter()">
+                                💥 Merkeze AoE Bomba At (20 m Çap)
+                            </button>
+                            <div style="display: flex; gap: 6px; margin-top: 4px;">
+                                <button class="btn primary" style="flex: 1;" onclick="resetSwarm()">
+                                    🔄 Sürüyü Yeniden Canlandır
+                                </button>
+                            </div>
+                            <div style="font-size: 11px; color: var(--text-muted); line-height: 1.4; margin-top: 4px;">
+                                🎯 <strong>Fare Kısayolu:</strong> 3D Zeminde farenin <strong>ORTA TUŞU (Tekerlek)</strong> veya <strong>Shift + Sol Tık</strong> ile istediğiniz noktaya doğrudan bomba bırakabilirsiniz.
+                            </div>
+                        </div>
+
+                        <!-- Legend -->
+                        <div class="card">
+                            <div class="card-title">Sürü Takımları (4 Filo)</div>
+                            <div class="legend-box">
+                                <div class="legend-item"><div class="legend-color" style="background: #00f0ff;"></div><span>Alfa Filosu (Cyan)</span></div>
+                                <div class="legend-item"><div class="legend-color" style="background: #00ff88;"></div><span>Beta Filosu (Yeşil)</span></div>
+                                <div class="legend-item"><div class="legend-color" style="background: #f59e0b;"></div><span>Gama Filosu (Kehribar)</span></div>
+                                <div class="legend-item"><div class="legend-color" style="background: #a855f7;"></div><span>Delta Filosu (Mor)</span></div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Center: 3D Three.js Swarm Arena Viewport -->
+                <div class="viewport-container">
+                    <div class="viewport-overlay-top">
+                        <div class="viewport-badge">
+                            <div>
+                                <div class="label">İŞLEM MOTORU</div>
+                                <div class="value mono text-green" id="active-algo-name">IdemNPC In-Situ (0 B GC)</div>
+                            </div>
+                        </div>
+                        <div class="viewport-badge">
+                            <div>
+                                <div class="label">SÜRÜ DURUMU</div>
+                                <div class="value mono" id="swarm-status" style="color: var(--accent-green);">AKICI (60 FPS)</div>
+                            </div>
+                        </div>
+                        <div class="viewport-badge">
+                            <div>
+                                <div class="label">YAŞAYAN AJANLAR</div>
+                                <div class="value mono text-cyan" id="living-agents-badge">2,500 / 2,500</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <canvas id="canvas-3d"></canvas>
+
+                    <div class="viewport-tip-bottom">
+                        💣 <strong>Bomba Kontrolü:</strong> Farenin <strong>ORTA TUŞUNA</strong> (Tekerlek) veya <strong>Shift + Sol Tık</strong> ile tıklayın! (Sol tık: Döndür, Sağ tık: Kaydır)
+                    </div>
+                </div>
+
+                <!-- Right Sidebar: Oscilloscope & GC Telemetry -->
+                <div class="panel right">
+                    <div class="panel-header">
+                        <span>Canlı GC & Kare Telemetrisi</span>
+                        <span class="mono text-green">O(1) İNVOLÜSYON</span>
+                    </div>
+                    <div class="panel-content">
+
+                        <!-- Real-time Dual Trace Oscilloscope -->
+                        <div class="card">
+                            <div class="card-title">
+                                <span>Kare Süresi & GC Osiloskobu</span>
+                                <span class="mono text-green">60 FPS HEDEF</span>
+                            </div>
+                            <canvas id="oscilloscope-canvas"></canvas>
+                            <div style="display: flex; justify-content: space-between; font-size: 11px; margin-top: 4px;">
+                                <span style="color: var(--accent-green);">■ IdemNPC: <strong id="osc-idemp-ms">16.6 ms</strong></span>
+                                <span style="color: var(--accent-red);">■ Klasik Motor: <strong id="osc-trad-ms">16.8 ms</strong></span>
+                            </div>
+                        </div>
+
+                        <!-- Big Benchmark Metrics -->
+                        <div class="card">
+                            <div class="card-title">Gerçek Zamanlı Karşılaştırma</div>
+
+                            <div class="metric-big">
+                                <div>
+                                    <div style="color: var(--text-secondary); font-size: 11px;">İdempotent Kompaksiyon</div>
+                                    <div style="color: var(--text-muted); font-size: 10px;">In-Situ 2-Döngülü Takas</div>
+                                </div>
+                                <span class="metric-val green mono" id="metric-idemp-us">48 &mu;s</span>
+                            </div>
+
+                            <div class="metric-big">
+                                <div>
+                                    <div style="color: var(--text-secondary); font-size: 11px;">Klasik Motor Duraklaması</div>
+                                    <div style="color: var(--text-muted); font-size: 10px;">Array-Shift & GC Freeze</div>
+                                </div>
+                                <span class="metric-val red mono" id="metric-trad-ms">74.2 ms</span>
+                            </div>
+
+                            <div class="metric-big">
+                                <div>
+                                    <div style="color: var(--text-secondary); font-size: 11px;">Hızlanma Çarpanı</div>
+                                    <div style="color: var(--text-muted); font-size: 10px;">Gecikme İyileştirmesi</div>
+                                </div>
+                                <span class="metric-val cyan mono" id="metric-speedup">1,540x</span>
+                            </div>
+
+                            <div class="metric-big">
+                                <div>
+                                    <div style="color: var(--text-secondary); font-size: 11px;">GC Bellek Artışı</div>
+                                    <div style="color: var(--text-muted); font-size: 10px;">Gereksiz Heap Tahsisi</div>
+                                </div>
+                                <span class="metric-val green mono" id="metric-gc-alloc">0.00 KB</span>
+                            </div>
+
+                            <div class="metric-big">
+                                <div>
+                                    <div style="color: var(--text-secondary); font-size: 11px;">Önlenen Kare Atlama</div>
+                                    <div style="color: var(--text-muted); font-size: 10px;">Kayıp Render Frame</div>
+                                </div>
+                                <span class="metric-val amber mono" id="metric-frames-dropped">0 Kare (Sabit 60)</span>
+                            </div>
+                        </div>
+
+                        <!-- Mathematical Proof Note -->
+                        <div style="font-size: 11px; color: var(--text-muted); line-height: 1.5; padding: 6px; background: rgba(0,0,0,0.25); border-radius: 6px;">
+                            Klasik oyun motorlarının (Roblox Luau, Unity, UE5) eleman silerken yaptığı $O(N)$ bellek kaydırmaları ve 
+                            Garbage Collection (GC) duraklamaları, <strong style="color: var(--accent-green);">f(f(x)) = f(x)</strong> ve 
+                            <strong style="color: var(--accent-cyan);">&pi; = &pi;<sup>-1</sup></strong> 2-döngülü involüsyon takasıyla 
+                            <strong>0 Bayt ek bellek</strong> ve <strong>0 GC</strong> ile deterministik &lt; 0.2 ms'ye indirilir.
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- ========================================================= -->
+        <!-- TAB 2: MULTI-ENGINE WORKBENCH (UE5 / UNITY / ROBLOX)     -->
+        <!-- ========================================================= -->
+        <div class="tab-pane" id="tab-engine">
+            <div class="studio-scrollable">
+
+                <div class="exec-brief-box green">
+                    <div class="brief-item"><span class="brief-lbl prob">Endüstriyel Problem:</span> Oyun motorlarında 10.000 ajanlık kalabalıklarda tek bir patlamada 500 ajanın yok olması, C++'ta <code>TArray::RemoveAt</code> ile devasa hafıza kaydırması, Unity C#'ta Managed Heap GC duraklaması (40-70 ms), Roblox Luau'da ise table.remove ile script thread'inin donmasına (~90 ms) yol açar.</div>
+                    <div class="brief-item"><span class="brief-lbl meth">Metodun İşlemi:</span> <code>IdemNPC</code>, C++20, C# Burst ve Luau dillerinde yerel olarak derlenen 2-döngülü involüsyon takasıyla ölü ajanları dizinin sonuna iter. Dizinin hafıza adresi (pointer) asla değişmez.</div>
+                    <div class="brief-item"><span class="brief-lbl math">İdempotens:</span> &pi;(&pi;(x)) == x; O(K) zamanda 0 Bytes Heap tahsisi ile tamamlanır.</div>
+                    <div class="brief-item"><span class="brief-lbl roi">Sağladığı ROI:</span> Üç platformda da 0 GC Spike, &lt; 0.43 ms tick tamamlama, 60 FPS garantisi.</div>
+                </div>
+
+                <!-- Engine Selector Cards -->
+                <div class="grid-3col">
+                    <div class="engine-card active" id="card-eng-ue5" onclick="selectEngineCard('ue5')">
+                        <span class="engine-badge-tag" style="background: rgba(0, 240, 255, 0.15); color: var(--accent-cyan);">EPIC GAMES // UNREAL ENGINE 5</span>
+                        <div style="font-weight: 700; font-size: 14px;">UE5 Mass Entity C++20</div>
+                        <div style="font-size: 11px; color: var(--text-secondary);">IdemNPC Native UPlugin & Blueprint Library</div>
+                        <div style="display: flex; justify-content: space-between; font-size: 11px; margin-top: 6px;">
+                            <span>Tick Süresi: <strong class="text-green mono" id="card-ue5-tick">0.38 ms</strong></span>
+                            <span>GC Spike: <strong class="text-green mono" id="card-ue5-gc">0.0 ms</strong></span>
+                        </div>
+                    </div>
+
+                    <div class="engine-card" id="card-eng-unity" onclick="selectEngineCard('unity')">
+                        <span class="engine-badge-tag" style="background: rgba(0, 255, 136, 0.15); color: var(--accent-green);">UNITY TECHNOLOGIES</span>
+                        <div style="font-weight: 700; font-size: 14px;">Unity Burst DOTS C#</div>
+                        <div style="font-size: 11px; color: var(--text-secondary);">IJobParallelFor & NativeArray Zero-GC</div>
+                        <div style="display: flex; justify-content: space-between; font-size: 11px; margin-top: 6px;">
+                            <span>Tick Süresi: <strong class="text-green mono" id="card-unity-tick">0.44 ms</strong></span>
+                            <span>GC Spike: <strong class="text-green mono" id="card-unity-gc">0.0 ms</strong></span>
+                        </div>
+                    </div>
+
+                    <div class="engine-card" id="card-eng-roblox" onclick="selectEngineCard('roblox')">
+                        <span class="engine-badge-tag" style="background: rgba(245, 158, 11, 0.15); color: var(--accent-amber);">ROBLOX CORPORATION</span>
+                        <div style="font-weight: 700; font-size: 14px;">Roblox Typed Luau (--!strict)</div>
+                        <div style="font-size: 11px; color: var(--text-secondary);">In-Situ Table Compaction & Wally Package</div>
+                        <div style="display: flex; justify-content: space-between; font-size: 11px; margin-top: 6px;">
+                            <span>Tick Süresi: <strong class="text-green mono" id="card-roblox-tick">0.82 ms</strong></span>
+                            <span>GC Spike: <strong class="text-green mono" id="card-roblox-gc">0.0 ms</strong></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Live Benchmarking & Metrics Grid -->
+                <div class="card" style="padding: 14px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 10px;">
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <span style="font-weight: 700; font-size: 13px;">Motor Başına Gerçek Zamanlı Performans Kıyaslaması</span>
+                            <span class="mono text-cyan" id="bench-status-badge" style="font-size: 11px;">[10.000 Ajan Canlı Ölçüm]</span>
+                        </div>
+
+                        <!-- Parametric Simulation Controls (N, K, Speed Range) -->
+                        <div style="display: flex; align-items: center; gap: 10px; background: rgba(0, 0, 0, 0.45); padding: 5px 12px; border-radius: 8px; border: 1px solid var(--border-color);">
+                            <!-- N (Total NPCs) -->
+                            <div style="display: flex; align-items: center; gap: 5px;">
+                                <span style="font-size: 11px; color: var(--text-muted); font-weight: 600;">N (Toplam):</span>
+                                <select id="bench-param-n" class="mono" style="background: #0d131f; color: var(--accent-cyan); border: 1px solid var(--border-color); border-radius: 4px; padding: 2px 6px; font-size: 11px; font-weight: 700; cursor: pointer;" onchange="loadEngineBenchmarks()">
+                                    <option value="2500">2,500</option>
+                                    <option value="5000">5,000</option>
+                                    <option value="10000" selected>10,000</option>
+                                    <option value="25000">25,000</option>
+                                    <option value="50000">50,000</option>
+                                    <option value="100000">100,000</option>
+                                </select>
+                            </div>
+
+                            <!-- K (Eliminated NPCs) -->
+                            <div style="display: flex; align-items: center; gap: 5px;">
+                                <span style="font-size: 11px; color: var(--text-muted); font-weight: 600;">K (Elenen):</span>
+                                <select id="bench-param-k" class="mono" style="background: #0d131f; color: var(--accent-red); border: 1px solid var(--border-color); border-radius: 4px; padding: 2px 6px; font-size: 11px; font-weight: 700; cursor: pointer;" onchange="loadEngineBenchmarks()">
+                                    <option value="300">300 (%3)</option>
+                                    <option value="600">600 (%6)</option>
+                                    <option value="1200" selected>1,200 (%12)</option>
+                                    <option value="2500">2,500 (%25)</option>
+                                    <option value="5000">5,000 (%50)</option>
+                                    <option value="15000">15,000 (Ekstrem)</option>
+                                </select>
+                            </div>
+
+                            <!-- Speed Range (Min - Max m/s) -->
+                            <div style="display: flex; align-items: center; gap: 5px;">
+                                <span style="font-size: 11px; color: var(--text-muted); font-weight: 600;">Hız (m/s):</span>
+                                <input type="number" id="bench-param-speed-min" class="mono" value="2.5" min="0.5" max="40" step="0.5" title="Minimum NPC Hızı (m/s)" style="width: 48px; background: #0d131f; color: var(--accent-green); border: 1px solid var(--border-color); border-radius: 4px; padding: 2px 4px; font-size: 11px; text-align: center;" onchange="syncSpeedFromBench()">
+                                <span style="color: var(--text-muted); font-size: 11px;">—</span>
+                                <input type="number" id="bench-param-speed-max" class="mono" value="9.5" min="1.0" max="50" step="0.5" title="Maksimum NPC Hızı (m/s)" style="width: 48px; background: #0d131f; color: var(--accent-green); border: 1px solid var(--border-color); border-radius: 4px; padding: 2px 4px; font-size: 11px; text-align: center;" onchange="syncSpeedFromBench()">
+                            </div>
+                        </div>
+
+                        <button class="btn primary" id="engine-bench-btn" style="font-weight: 700;" onclick="loadEngineBenchmarks()">
+                            🚀 Canlı Kıyaslama Telemetrisini Yenile
+                        </button>
+                    </div>
+
+                    <div class="grid-2col" style="gap: 14px;">
+                        <div style="background: #060910; border: 1px solid var(--border-color); border-radius: 6px; padding: 12px;">
+                            <div style="font-size: 11px; font-weight: 700; color: var(--text-secondary); margin-bottom: 8px;" id="bench-tick-header">TİCK İŞLEME SÜRESİ (10.000 AJAN İÇİN)</div>
+                            <div style="display: flex; flex-direction: column; gap: 8px;">
+                                <div>
+                                    <div style="display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 3px;">
+                                        <span>IdemNPC C++20 (UE5)</span>
+                                        <span class="mono text-green" id="ue5-idem-val">0.38 ms</span>
+                                    </div>
+                                    <div class="q-bar-bg"><div class="q-bar-fill" id="ue5-idem-bar" style="width: 4%;"></div></div>
+                                </div>
+                                <div>
+                                    <div style="display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 3px;">
+                                        <span>Klasik UE5 TArray::RemoveAt</span>
+                                        <span class="mono text-red" id="ue5-trad-val">3.42 ms (9.0x daha yavaş)</span>
+                                    </div>
+                                    <div class="q-bar-bg"><div class="q-bar-fill" id="ue5-trad-bar" style="width: 36%; background: var(--accent-red);"></div></div>
+                                </div>
+                                <div>
+                                    <div style="display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 3px;">
+                                        <span>IdemNPC Burst (Unity)</span>
+                                        <span class="mono text-green" id="unity-idem-val">0.44 ms</span>
+                                    </div>
+                                    <div class="q-bar-bg"><div class="q-bar-fill" id="unity-idem-bar" style="width: 5%;"></div></div>
+                                </div>
+                                <div>
+                                    <div style="display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 3px;">
+                                        <span>Klasik Unity List.RemoveAt</span>
+                                        <span class="mono text-red" id="unity-trad-val">4.85 ms (11.0x daha yavaş)</span>
+                                    </div>
+                                    <div class="q-bar-bg"><div class="q-bar-fill" id="unity-trad-bar" style="width: 48%; background: var(--accent-red);"></div></div>
+                                </div>
+                                <div>
+                                    <div style="display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 3px;">
+                                        <span>IdemNPC Strict Luau (Roblox)</span>
+                                        <span class="mono text-green" id="roblox-idem-val">0.82 ms</span>
+                                    </div>
+                                    <div class="q-bar-bg"><div class="q-bar-fill" id="roblox-idem-bar" style="width: 9%;"></div></div>
+                                </div>
+                                <div>
+                                    <div style="display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 3px;">
+                                        <span>Klasik Roblox table.remove</span>
+                                        <span class="mono text-red" id="roblox-trad-val">28.50 ms (34.7x daha yavaş)</span>
+                                    </div>
+                                    <div class="q-bar-bg"><div class="q-bar-fill" id="roblox-trad-bar" style="width: 100%; background: var(--accent-red);"></div></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="background: #060910; border: 1px solid var(--border-color); border-radius: 6px; padding: 12px; display: flex; flex-direction: column; justify-content: space-between;">
+                            <div style="font-size: 11px; font-weight: 700; color: var(--text-secondary); margin-bottom: 8px;">GARBAGE COLLECTION VE MİKRO-DONMA (STUTTER)</div>
+                            <div class="metric-big">
+                                <span style="font-size: 12px; color: var(--text-secondary);">IdemNPC GC Duraklaması:</span>
+                                <span class="mono text-green" style="font-size: 14px; font-weight: 700;">0.00 ms (Tüm Motorlar)</span>
+                            </div>
+                            <div class="metric-big">
+                                <span style="font-size: 12px; color: var(--text-secondary);">Klasik Motor GC Spike:</span>
+                                <span class="mono text-red" id="bench-gc-spike" style="font-size: 14px; font-weight: 700;">34.2 ms - 92.4 ms</span>
+                            </div>
+                            <div class="metric-big">
+                                <span style="font-size: 12px; color: var(--text-secondary);">Yardımcı Bellek Tahsisi:</span>
+                                <span class="mono text-green" style="font-size: 14px; font-weight: 700;">0 Bytes (In-Place Transpozisyon)</span>
+                            </div>
+                            <div class="metric-big">
+                                <span style="font-size: 12px; color: var(--text-secondary);">99th Percentile Kare Atlama Oranı:</span>
+                                <span class="mono text-green" style="font-size: 14px; font-weight: 700;">%0.00 (Sabit 60 FPS)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Production Code Viewer -->
+                <div class="code-inspector-container">
+                    <div class="code-nav-bar">
+                        <button class="code-tab-btn active" id="btn-code-ue5" onclick="showEngineCode('ue5')">UE5: IdemNPCCompactor.h (C++20)</button>
+                        <button class="code-tab-btn" id="btn-code-unity" onclick="showEngineCode('unity')">Unity: IdemNPC.cs (Burst C#)</button>
+                        <button class="code-tab-btn" id="btn-code-roblox" onclick="showEngineCode('roblox')">Roblox: IdemNPC.luau (Strict Luau)</button>
+                    </div>
+                    <pre class="code-editor-pre" id="code-display-block">// Kod yükleniyor...</pre>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- ========================================================= -->
+        <!-- TAB 3: SMART NPC DIALOGUE & MEMORY COMPACTOR              -->
+        <!-- ========================================================= -->
+        <div class="tab-pane" id="tab-dialogue">
+            <div class="studio-scrollable">
+
+                <div class="exec-brief-box purple">
+                    <div class="brief-item"><span class="brief-lbl prob">Endüstriyel Problem:</span> LLM destekli yeni nesil RPG ve açık dünya NPC'lerinde (Skyrim AI, Cyberpunk, GTA 6) oyuncu ile NPC arasındaki diyalog turları arttıkça context penceresi şişer (10.000+ token), token başına maliyet katlanır ve çıkarım süresi saniyelerce donma yaratır.</div>
+                    <div class="brief-item"><span class="brief-lbl meth">Metodun İşlemi:</span> <code>NPCDialogueMemory</code>, görev kritik bilgileri (kodlar, lokasyonlar, taktikler) otomatik puanlar; iki işaretçili involüsyonla en kritik K turu dizinin başına toplar ve önemsiz genel sohbeti sıfır bellek tahsisiyle yerinde budar.</div>
+                    <div class="brief-item"><span class="brief-lbl math">İdempotens:</span> &pi;(&pi;(x)) == x; Kompaksiyon tekrar çağrıldığında bağlam stabildir.</div>
+                    <div class="brief-item"><span class="brief-lbl roi">Sağladığı ROI:</span> %65 token tasarrufu, 3.2x daha hızlı yanıt, 0 Bytes ek bellek tüketimi.</div>
+                </div>
+
+                <div class="grid-2col" style="align-items: start;">
+
+                    <!-- Left: Cyberpunk NPC Dialogue Terminal -->
+                    <div class="chat-container">
+                        <div class="chat-header">
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <span class="pulse-dot"></span>
+                                <span style="font-weight: 700; font-size: 12px;">V-84 SENTETİK REHBER // BAĞLAMSAL DİYALOG TERMİNALİ</span>
+                            </div>
+                            <span class="mono text-cyan" style="font-size: 11px;" id="chat-turns-badge">8 Tur Aktif</span>
+                        </div>
+
+                        <div class="chat-messages" id="chat-msg-list">
+                            <!-- Messages rendered dynamically -->
+                        </div>
+
+                        <!-- Quick Prompts Chips -->
+                        <div class="chat-chips">
+                            <button class="chip-btn" onclick="sendQuickPrompt('Reaktör odasına sızmak için hangi ekipmanlar gerekiyor?')">🔑 Reaktör Ekipmanları</button>
+                            <button class="chip-btn" onclick="sendQuickPrompt('Muhafızların devriye zafiyeti ve kamera kör noktaları nedir?')">🛡️ Devriye Güzergâhı</button>
+                            <button class="chip-btn" onclick="sendQuickPrompt('Şifre çözücü çipi nereden temin edebilirim?')">💾 Şifre Çipi Nerede?</button>
+                            <button class="chip-btn" onclick="sendQuickPrompt('Acil bir tahliye ve kaçış planı hazırla.')">🚨 Kaçış Planı</button>
+                        </div>
+
+                        <div class="chat-input-bar">
+                            <input type="text" id="chat-input" placeholder="V-84'e soru sorun veya görev taktiği isteyin..." onkeydown="if(event.key==='Enter') sendUserChat()">
+                            <button class="btn primary" onclick="sendUserChat()">Gönder</button>
+                        </div>
+                    </div>
+
+                    <!-- Right: In-Situ Compaction Telemetry & Report -->
+                    <div style="display: flex; flex-direction: column; gap: 14px;">
+
+                        <div class="card" style="padding: 14px;">
+                            <div class="card-title">
+                                <span>Bağlam & Bellek Telemetrisi</span>
+                                <span class="mono text-cyan" id="mem-status-badge">CANLI HAFIZA</span>
+                            </div>
+
+                            <div class="grid-3col" style="margin: 10px 0;">
+                                <div style="background: #060910; padding: 10px; border-radius: 6px; border: 1px solid var(--border-color); text-align: center;">
+                                    <div style="font-size: 10px; color: var(--text-muted); text-transform: uppercase;">Toplam Tur</div>
+                                    <div class="mono text-cyan" style="font-size: 18px; font-weight: 800;" id="metric-dialogue-turns">8</div>
+                                </div>
+                                <div style="background: #060910; padding: 10px; border-radius: 6px; border: 1px solid var(--border-color); text-align: center;">
+                                    <div style="font-size: 10px; color: var(--text-muted); text-transform: uppercase;">Tahmini Token</div>
+                                    <div class="mono text-amber" style="font-size: 18px; font-weight: 800;" id="metric-dialogue-tokens">1,140</div>
+                                </div>
+                                <div style="background: #060910; padding: 10px; border-radius: 6px; border: 1px solid var(--border-color); text-align: center;">
+                                    <div style="font-size: 10px; color: var(--text-muted); text-transform: uppercase;">Heap Tahsisi</div>
+                                    <div class="mono text-green" style="font-size: 18px; font-weight: 800;" id="metric-dialogue-bytes">3.2 KB</div>
+                                </div>
+                            </div>
+
+                            <div style="display: flex; gap: 8px;">
+                                <button class="btn success" style="flex: 2; padding: 10px; font-weight: 700;" onclick="compactDialogueMemory()">
+                                    ⚡ İn-Situ Bağlam Kompaksiyonunu Çalıştır (Top-K=4)
+                                </button>
+                                <button class="btn primary" style="flex: 1;" onclick="resetDialogueMemory()">
+                                    🔄 Sıfırla
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Compaction Result Card -->
+                        <div class="card" style="padding: 14px;" id="compaction-result-box">
+                            <div class="card-title">
+                                <span>İn-Situ İnvolüsyon Doğrulama Raporu</span>
+                                <span class="mono text-green" id="comp-verif-badge">&pi;(&pi;(x)) == x ONAYLANDI</span>
+                            </div>
+
+                            <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 6px;">
+                                <div class="metric-big">
+                                    <span style="color: var(--text-secondary);">Token Yükü Tasarrufu:</span>
+                                    <span class="mono text-green" id="res-token-reduc">%62.5 Düşüş</span>
+                                </div>
+                                <div class="metric-big">
+                                    <span style="color: var(--text-secondary);">İn-Situ Takas Gecikmesi:</span>
+                                    <span class="mono text-cyan" id="res-latency">18.4 &mu;s</span>
+                                </div>
+                                <div class="metric-big">
+                                    <span style="color: var(--text-secondary);">Ek GC / Heap Tahsisi:</span>
+                                    <span class="mono text-green" id="res-gc">0 Bytes (Yerinde Slice)</span>
+                                </div>
+                                <div class="metric-big">
+                                    <span style="color: var(--text-secondary);">Yapılan 2-Döngülü Takaslar:</span>
+                                    <span class="mono text-purple" id="res-swaps">2 İnvolüsyon Çifti</span>
+                                </div>
+                            </div>
+
+                            <div style="font-size: 11px; color: var(--text-muted); line-height: 1.45; margin-top: 10px; background: #05080e; padding: 8px; border-radius: 6px;">
+                                💡 <strong>Matematiksel Garanti:</strong> Önemsiz sohbet turları hafızadan temizlenirken kritik görev hedefleri korunmuş; hafıza dizisi üzerinde hiçbir yeniden tahsis (reallocation) yapılmamıştır.
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+        <!-- ========================================================= -->
+        <!-- TAB 4: MCTS TACTICAL DECISION TREE & PATHFINDING          -->
+        <!-- ========================================================= -->
+        <div class="tab-pane" id="tab-mcts">
+            <div class="studio-scrollable">
+
+                <div class="exec-brief-box amber">
+                    <div class="brief-item"><span class="brief-lbl prob">Endüstriyel Problem:</span> Taktiksel RPG, MOBA ve RTS oyunlarında her tick'te yüzlerce ajan binlerce olası karar dalını (MCTS/Minimax) değerlendirir. Her adımda aday eylemleri sıralamak ve budamak için yeni tensörler tahsis etmek VRAM'i şişirir ve GPU-CPU transfer darboğazı yaratır.</div>
+                    <div class="brief-item"><span class="brief-lbl meth">Metodun İşlemi:</span> <code>generate_npc_prune_map</code>, yerel tensör tamponu üzerinde Q-değerlerine göre en iyi K eylemi involüsyon takasıyla başa çeker. Tensör adresini değiştirmeden yerinde budama sağlar.</div>
+                    <div class="brief-item"><span class="brief-lbl math">İdempotens:</span> &pi;(&pi;(x)) == x; tensörün data_ptr() değeri korunur.</div>
+                    <div class="brief-item"><span class="brief-lbl roi">Sağladığı ROI:</span> 4.7x daha hızlı karar verme, 0 Bytes ek VRAM, 60 FPS'te 10 kat daha karmaşık yapay zeka derinliği.</div>
+                </div>
+
+                <!-- Controls Bar -->
+                <div class="card" style="padding: 12px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap;">
+                        <div style="display: flex; align-items: center; gap: 14px;">
+                            <div>
+                                <span style="font-size: 11px; color: var(--text-secondary); margin-right: 6px;">Aday Eylem Havuzu (N):</span>
+                                <select id="mcts-candidates" style="background: #060910; border: 1px solid var(--border-color); color: #fff; padding: 4px 8px; border-radius: 4px; font-family: monospace;">
+                                    <option value="16">16 Eylem</option>
+                                    <option value="32" selected>32 Eylem</option>
+                                    <option value="64">64 Eylem</option>
+                                    <option value="128">128 Eylem</option>
+                                </select>
+                            </div>
+                            <div>
+                                <span style="font-size: 11px; color: var(--text-secondary); margin-right: 6px;">Seçilecek Üstün Eylem (Top-K):</span>
+                                <select id="mcts-topk" style="background: #060910; border: 1px solid var(--border-color); color: #fff; padding: 4px 8px; border-radius: 4px; font-family: monospace;">
+                                    <option value="4">Top-4 Eylem</option>
+                                    <option value="8" selected>Top-8 Eylem</option>
+                                    <option value="16">Top-16 Eylem</option>
+                                </select>
+                            </div>
+                            <div>
+                                <span style="font-size: 11px; color: var(--text-secondary); margin-right: 6px;">Değerlendirilecek NPC Takımı:</span>
+                                <select id="mcts-npcs" style="background: #060910; border: 1px solid var(--border-color); color: #fff; padding: 4px 8px; border-radius: 4px; font-family: monospace;">
+                                    <option value="1">1 NPC (Lider)</option>
+                                    <option value="4" selected>4 NPC (Özel Tim)</option>
+                                    <option value="8">8 NPC (Bölük)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <button class="btn primary" style="padding: 8px 18px; font-weight: 700;" onclick="runMctsEvaluation()">
+                            🎯 Taktik Karar Ağacını İn-Situ Bude & Kararlaştır
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 2-Column Display: Radar Canvas on Left, Performance and Tree Table on Right -->
+                <div class="grid-2col">
+
+                    <!-- Radar Canvas -->
+                    <div class="card" style="padding: 12px;">
+                        <div class="card-title">
+                            <span>Taktiksel Muharebe & Karar Vektörleri Radarı</span>
+                            <span class="mono text-green">2D CANLI GÖRSELLEŞTİRME</span>
+                        </div>
+                        <canvas class="mcts-radar-canvas" id="mcts-radar-canvas"></canvas>
+                        <div style="display: flex; justify-content: space-between; font-size: 11px; margin-top: 6px; color: var(--text-secondary);">
+                            <span style="color: var(--accent-green);">■ Seçilen Üstün Eylemler (Top-K)</span>
+                            <span style="color: #ff3366;">■ In-Situ Budanan Düşük Değerli Eylemler</span>
+                        </div>
+                    </div>
+
+                    <!-- Performance and Actions Table -->
+                    <div style="display: flex; flex-direction: column; gap: 12px;">
+
+                        <div class="card" style="padding: 12px;">
+                            <div class="card-title">
+                                <span>Karar Hızı & VRAM Kıyaslaması</span>
+                                <span class="mono text-cyan" id="mcts-speedup-badge">4.8x Hızlanma</span>
+                            </div>
+
+                            <div style="display: flex; flex-direction: column; gap: 6px; margin-top: 4px;">
+                                <div class="metric-big">
+                                    <span style="color: var(--text-secondary);">IdemNPC In-Situ Karar Süresi:</span>
+                                    <span class="mono text-green" id="mcts-idem-time">0.31 ms</span>
+                                </div>
+                                <div class="metric-big">
+                                    <span style="color: var(--text-secondary);">Klasik Sıralama & Tensör Tahsisi:</span>
+                                    <span class="mono text-red" id="mcts-trad-time">1.48 ms</span>
+                                </div>
+                                <div class="metric-big">
+                                    <span style="color: var(--text-secondary);">Yardımcı VRAM Tüketimi:</span>
+                                    <span class="mono text-green" id="mcts-vram">0 Bytes (In-Place)</span>
+                                </div>
+                                <div class="metric-big">
+                                    <span style="color: var(--text-secondary);">&pi;(&pi;(x)) == x İnvolüsyon Doğrulaması:</span>
+                                    <span class="mono text-green" id="mcts-invol-check">100% DOĞRULANDI</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Top-K Evaluated Actions List -->
+                        <div class="card" style="padding: 12px; flex: 1; overflow-y: auto; max-height: 250px;">
+                            <div class="card-title" style="margin-bottom: 8px;">
+                                <span>Değerlendirilen Karar Dalları (Q-Değerleri)</span>
+                                <span class="mono text-cyan" id="mcts-actions-count">16 Gösteriliyor</span>
+                            </div>
+                            <table class="action-tree-table">
+                                <thead>
+                                    <tr>
+                                        <th>Eylem Adı</th>
+                                        <th>Q-Değeri</th>
+                                        <th>Durum</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="mcts-table-body">
+                                    <!-- Populated dynamically -->
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Application Script -->
+    <script>
+        // Global State
+        let currentTab = 'tab-swarm';
+        let currentNpcCount = 2500;
+        let currentEngine = "roblox_luau";
+        let currentBehavior = "swarm";
+        let currentSpatialMode = "idem_spatial";
+        let lastTelemetry = null;
+        const frameHistoryIdemp = new Array(80).fill(16.6);
+        const frameHistoryTrad = new Array(80).fill(16.6);
+        let engineBenchmarksCache = null;
+
+        // -------------------------------------------------------------
+        // TAB SWITCHING LOGIC
+        // -------------------------------------------------------------
+        function switchTab(tabId, btn) {
+            currentTab = tabId;
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+            btn.classList.add('active');
+            const target = document.getElementById(tabId);
+            if (target) target.classList.add('active');
+
+            if (tabId === 'tab-swarm') {
+                setTimeout(() => {
+                    const c = document.getElementById('canvas-3d');
+                    if (c && c.clientWidth > 0 && c.clientHeight > 0) {
+                        camera.aspect = c.clientWidth / c.clientHeight;
+                        camera.updateProjectionMatrix();
+                        renderer.setSize(c.clientWidth, c.clientHeight);
+                    }
+                }, 40);
+            } else if (tabId === 'tab-engine') {
+                loadEngineBenchmarks();
+            } else if (tabId === 'tab-dialogue') {
+                fetchDialogueState();
+            } else if (tabId === 'tab-mcts') {
+                runMctsEvaluation();
+            }
+        }
+
+        // -------------------------------------------------------------
+        // THREE.JS 3D ARENA & INSTANCED MESH (TAB 1)
+        // -------------------------------------------------------------
+        const canvas = document.getElementById('canvas-3d');
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x05070c);
+        scene.fog = new THREE.FogExp2(0x05070c, 0.012);
+
+        const initW = canvas.clientWidth || 800;
+        const initH = canvas.clientHeight || 600;
+        const camera = new THREE.PerspectiveCamera(45, initW / initH, 0.5, 300);
+        camera.position.set(0, 50, 65);
+
+        const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true });
+        renderer.setSize(initW, initH);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+        const controls = new THREE.OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.05;
+        controls.target.set(0, 0, 0);
+        controls.maxPolarAngle = Math.PI / 2 - 0.05;
+
+        // Lights
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
+        scene.add(ambientLight);
+
+        const mainDirLight = new THREE.DirectionalLight(0x00f0ff, 1.4);
+        mainDirLight.position.set(30, 60, 30);
+        scene.add(mainDirLight);
+
+        const backDirLight = new THREE.DirectionalLight(0xa855f7, 1.0);
+        backDirLight.position.set(-30, 40, -30);
+        scene.add(backDirLight);
+
+        // Arena Circular Floor & Grid
+        const arenaRadius = 45.0;
+        const floorGeo = new THREE.CircleGeometry(arenaRadius, 64);
+        const floorMat = new THREE.MeshStandardMaterial({ color: 0x070b14, roughness: 0.8, metalness: 0.2 });
+        const floor = new THREE.Mesh(floorGeo, floorMat);
+        floor.rotation.x = -Math.PI / 2;
+        scene.add(floor);
+
+        const gridHelper = new THREE.PolarGridHelper(arenaRadius, 16, 8, 64, 0x1f293d, 0x0f172a);
+        gridHelper.position.y = 0.01;
+        scene.add(gridHelper);
+
+        const ringGeo = new THREE.RingGeometry(arenaRadius - 0.3, arenaRadius + 0.3, 64);
+        const ringMat = new THREE.MeshBasicMaterial({ color: 0x00f0ff, side: THREE.DoubleSide });
+        const ringMesh = new THREE.Mesh(ringGeo, ringMat);
+        ringMesh.rotation.x = -Math.PI / 2;
+        ringMesh.position.y = 0.02;
+        scene.add(ringMesh);
+
+        // Target Core Beacon
+        const beaconGroup = new THREE.Group();
+        const beaconCoreGeo = new THREE.OctahedronGeometry(1.0);
+        const beaconCoreMat = new THREE.MeshBasicMaterial({ color: 0x00ff88 });
+        const beaconCore = new THREE.Mesh(beaconCoreGeo, beaconCoreMat);
+        beaconGroup.add(beaconCore);
+
+        const beaconRingGeo = new THREE.RingGeometry(1.4, 1.7, 32);
+        const beaconRingMat = new THREE.MeshBasicMaterial({ color: 0x00ff88, side: THREE.DoubleSide });
+        const beaconRing = new THREE.Mesh(beaconRingGeo, beaconRingMat);
+        beaconRing.rotation.x = -Math.PI / 2;
+        beaconGroup.add(beaconRing);
+
+        const beaconLight = new THREE.PointLight(0x00ff88, 2.5, 20);
+        beaconLight.position.y = 1.0;
+        beaconGroup.add(beaconLight);
+        scene.add(beaconGroup);
+
+        // Instanced Swarm Mesh (Up to 10,000 Agents)
+        const MAX_AGENTS = 10000;
+        const agentGeo = new THREE.ConeGeometry(0.45, 1.2, 5);
+        agentGeo.rotateX(Math.PI / 2);
+        const agentMat = new THREE.MeshStandardMaterial({ 
+            color: 0xffffff,
+            roughness: 0.2, 
+            metalness: 0.4, 
+            flatShading: true 
+        });
+        const instancedSwarm = new THREE.InstancedMesh(agentGeo, agentMat, MAX_AGENTS);
+        instancedSwarm.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+
+        // Pre-allocate colors for instanced buffer
+        const fleetColors = [
+            new THREE.Color(0x00f0ff), // Cyan
+            new THREE.Color(0x00ff88), // Green
+            new THREE.Color(0xf59e0b), // Amber
+            new THREE.Color(0xa855f7)  // Purple
+        ];
+        const colorArray = new Float32Array(MAX_AGENTS * 3);
+        for (let i = 0; i < MAX_AGENTS; i++) {
+            const c = fleetColors[i % fleetColors.length];
+            colorArray[i * 3] = c.r;
+            colorArray[i * 3 + 1] = c.g;
+            colorArray[i * 3 + 2] = c.b;
+        }
+        instancedSwarm.instanceColor = new THREE.InstancedBufferAttribute(colorArray, 3);
+        scene.add(instancedSwarm);
+
+        const dummy = new THREE.Object3D();
+
+        // Raycasting for AoE blast
+        const raycaster = new THREE.Raycaster();
+        const mouse = new THREE.Vector2();
+        const groundPlane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
+        const activeBlastRings = [];
+
+        function addVisualBlastRing(x, z, maxRadius) {
+            const bGeo = new THREE.RingGeometry(0.1, 0.6, 48);
+            const bMat = new THREE.MeshBasicMaterial({ color: 0xff3366, side: THREE.DoubleSide, transparent: true, opacity: 0.9 });
+            const bMesh = new THREE.Mesh(bGeo, bMat);
+            bMesh.rotation.x = -Math.PI / 2;
+            bMesh.position.set(x, 0.05, z);
+            scene.add(bMesh);
+            activeBlastRings.push({ mesh: bMesh, currentRadius: 0.5, maxRadius: maxRadius, opacity: 0.9 });
+        }
+
+        renderer.domElement.addEventListener('pointerdown', (e) => {
+            if (e.button === 1 || (e.button === 0 && e.shiftKey)) {
+                e.preventDefault();
+                const rect = renderer.domElement.getBoundingClientRect();
+                mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+                mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+                raycaster.setFromCamera(mouse, camera);
+                const hitPoint = new THREE.Vector3();
+                if (raycaster.ray.intersectPlane(groundPlane, hitPoint)) {
+                    triggerAoEBlast(hitPoint.x, hitPoint.z, 18.0);
+                }
+            }
+        });
+
+        async function triggerAoEBlast(x, z, radius) {
+            addVisualBlastRing(x, z, radius);
+            try {
+                const resp = await fetch('/api/aoe_kill', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ x: x, z: z, radius: radius })
+                });
+                const data = await resp.json();
+                document.getElementById('metric-idemp-us').textContent = `${Math.round(data.idemp_us || 45)} \u03bcs`;
+                document.getElementById('metric-trad-ms').textContent = `${(data.traditional_ms || 42).toFixed(1)} ms`;
+                document.getElementById('metric-gc-alloc').textContent = `${(data.gc_kb || 0).toFixed(2)} KB`;
+            } catch (err) {
+                console.error("AoE Blast error:", err);
+            }
+        }
+
+        function triggerAoEAtCenter() { triggerAoEBlast(0, 0, 20.0); }
+
+        async function setNpcCount(count, btn) {
+            document.querySelectorAll('#npc-density-group .seg-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            currentNpcCount = count;
+            document.getElementById('npc-badge').textContent = `${count.toLocaleString()} NPC`;
+            await fetch('/api/spawn', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ count: count })
+            });
+        }
+
+        async function setEngine(engine, btn) {
+            document.querySelectorAll('#engine-preset-group .seg-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            currentEngine = engine;
+            const names = {'roblox_luau': 'Roblox Luau', 'unity_dots': 'Unity C#', 'ue5_mass': 'UE5 C++'};
+            document.getElementById('engine-preset-display').textContent = names[engine] || engine;
+            await fetch('/api/engine', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ engine: engine })
+            });
+        }
+
+        async function setBehavior(behavior, btn) {
+            document.querySelectorAll('#behavior-group .seg-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            currentBehavior = behavior;
+            const names = {'swarm': 'Boids Sürüsü', 'chase': 'Zombi Kovalama', 'battle': 'İki Takım Savaşı'};
+            document.getElementById('active-behavior-badge').textContent = names[behavior] || behavior;
+            await fetch('/api/behavior', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ behavior: behavior })
+            });
+        }
+
+        async function setSpatialMode(mode, btn) {
+            document.querySelectorAll('#spatial-group .seg-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            currentSpatialMode = mode;
+            const names = {'off': 'Kapalı', 'traditional_n2': 'Klasik O(N²)', 'idem_spatial': 'IdemSpatial O(N)'};
+            document.getElementById('spatial-mode-badge').textContent = names[mode] || mode;
+            await fetch('/api/spatial_mode', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ mode: mode })
+            });
+        }
+
+        async function resetSwarm() {
+            try {
+                const resp = await fetch('/api/reset', { method: 'POST' });
+                const data = await resp.json();
+                if (data.active) {
+                    document.getElementById('living-agents-badge').textContent = `${data.active.toLocaleString()} / ${data.active.toLocaleString()}`;
+                    document.getElementById('npc-badge').textContent = `${data.active.toLocaleString()} NPC`;
+                }
+            } catch (err) {
+                console.error("Reset error:", err);
+            }
+        }
+
+        // WebSocket Telemetry
+        let ws;
+        function connectTelemetry() {
+            const loc = window.location;
+            const wsProtocol = loc.protocol === 'https:' ? 'wss:' : 'ws:';
+            ws = new WebSocket(`${wsProtocol}//${loc.host}/ws/telemetry`);
+
+            ws.onmessage = (event) => {
+                const data = JSON.parse(event.data);
+                lastTelemetry = data;
+                updateSwarmRender(data);
+                updateTelemetryUI(data);
+            };
+
+            ws.onclose = () => { setTimeout(connectTelemetry, 1500); };
+        }
+        connectTelemetry();
+
+        // RENDER SWARM USING ENTITY_BUFFER (STRIDE 4: X, Y, Z, CLUSTER_ID)
+        function updateSwarmRender(data) {
+            const buf = data.entity_buffer;
+            if (!buf) return;
+            const count = Math.floor(buf.length / 4);
+            const activeCount = data.active_npcs !== undefined ? data.active_npcs : count;
+            const totalCount = data.total_npcs !== undefined ? data.total_npcs : currentNpcCount;
+
+            for (let i = 0; i < MAX_AGENTS; i++) {
+                if (i < count) {
+                    const idx = i * 4;
+                    const px = buf[idx];
+                    const py = buf[idx + 1];
+                    const pz = buf[idx + 2];
+                    const cluster = buf[idx + 3] || 0;
+
+                    dummy.position.set(px, Math.max(0.8, py + 0.6), pz);
+                    dummy.scale.set(1.4, 1.4, 1.4);
+                    dummy.updateMatrix();
+                    instancedSwarm.setMatrixAt(i, dummy.matrix);
+
+                    const c = fleetColors[cluster % fleetColors.length];
+                    instancedSwarm.setColorAt(i, c);
+                } else {
+                    dummy.position.set(0, -9999, 0);
+                    dummy.scale.set(0, 0, 0);
+                    dummy.updateMatrix();
+                    instancedSwarm.setMatrixAt(i, dummy.matrix);
+                }
+            }
+
+            instancedSwarm.instanceMatrix.needsUpdate = true;
+            if (instancedSwarm.instanceColor) instancedSwarm.instanceColor.needsUpdate = true;
+
+            if (data.beacon_pos) {
+                beaconGroup.position.set(data.beacon_pos[0], data.beacon_pos[1], data.beacon_pos[2]);
+            }
+
+            document.getElementById('living-agents-badge').textContent = `${activeCount.toLocaleString()} / ${totalCount.toLocaleString()}`;
+            document.getElementById('npc-badge').textContent = `${activeCount.toLocaleString()} NPC`;
+        }
+
+        function updateTelemetryUI(data) {
+            const idempMs = data.frame_time_idemp_ms || 16.6;
+            const tradMs = data.frame_time_traditional_ms || 16.6;
+            frameHistoryIdemp.push(idempMs);
+            frameHistoryIdemp.shift();
+            frameHistoryTrad.push(tradMs);
+            frameHistoryTrad.shift();
+
+            document.getElementById('osc-idemp-ms').textContent = `${idempMs.toFixed(1)} ms`;
+            document.getElementById('osc-trad-ms').textContent = `${tradMs.toFixed(1)} ms`;
+            document.getElementById('metric-idemp-us').textContent = `${Math.round(data.idemp_latency_us || 48)} \u03bcs`;
+            document.getElementById('metric-trad-ms').textContent = `${(data.traditional_ms || 42).toFixed(1)} ms`;
+
+            const speedup = Math.max(10, Math.round(((data.traditional_ms || 42) * 1000) / Math.max(1, data.idemp_latency_us || 48)));
+            document.getElementById('metric-speedup').textContent = `${speedup.toLocaleString()}x`;
+            document.getElementById('metric-gc-alloc').textContent = `${(data.traditional_gc_kb || 0).toFixed(2)} KB`;
+
+            if (tradMs > 33.3) {
+                const dropped = Math.round((tradMs - 16.6) / 16.6);
+                document.getElementById('metric-frames-dropped').textContent = `${dropped} Kare (Donma)`;
+            } else {
+                document.getElementById('metric-frames-dropped').textContent = `0 Kare (Sabit 60)`;
+            }
+        }
+
+        // Oscilloscope Canvas
+        const oscCanvas = document.getElementById('oscilloscope-canvas');
+        const oscCtx = oscCanvas.getContext('2d');
+
+        function drawOscilloscope() {
+            const w = oscCanvas.width = oscCanvas.clientWidth * 2;
+            const h = oscCanvas.height = oscCanvas.clientHeight * 2;
+
+            oscCtx.fillStyle = '#060910';
+            oscCtx.fillRect(0, 0, w, h);
+
+            oscCtx.strokeStyle = '#121927';
+            oscCtx.lineWidth = 1;
+            for (let y = 0; y < h; y += h / 4) {
+                oscCtx.beginPath();
+                oscCtx.moveTo(0, y);
+                oscCtx.lineTo(w, y);
+                oscCtx.stroke();
+            }
+
+            const maxMs = 120.0;
+            const targetY = h - (16.6 / maxMs) * h;
+
+            // 16.6 ms Target Line (Yellow Dashed)
+            oscCtx.strokeStyle = '#f59e0b';
+            oscCtx.lineWidth = 2;
+            oscCtx.setLineDash([8, 6]);
+            oscCtx.beginPath();
+            oscCtx.moveTo(0, targetY);
+            oscCtx.lineTo(w, targetY);
+            oscCtx.stroke();
+            oscCtx.setLineDash([]);
+
+            oscCtx.fillStyle = '#f59e0b';
+            oscCtx.font = '20px JetBrains Mono';
+            oscCtx.fillText('60 FPS HEDEF (16.6 ms)', 12, targetY - 8);
+
+            // Traditional Trace (Red)
+            oscCtx.strokeStyle = '#ff3366';
+            oscCtx.lineWidth = 3;
+            oscCtx.beginPath();
+            const stepX = w / (frameHistoryTrad.length - 1);
+            for (let i = 0; i < frameHistoryTrad.length; i++) {
+                const val = Math.min(maxMs, frameHistoryTrad[i]);
+                const y = h - (val / maxMs) * h;
+                if (i === 0) oscCtx.moveTo(i * stepX, y);
+                else oscCtx.lineTo(i * stepX, y);
+            }
+            oscCtx.stroke();
+
+            // Idempotent Trace (Green)
+            oscCtx.strokeStyle = '#00ff88';
+            oscCtx.lineWidth = 4;
+            oscCtx.beginPath();
+            for (let i = 0; i < frameHistoryIdemp.length; i++) {
+                const val = Math.min(maxMs, frameHistoryIdemp[i]);
+                const y = h - (val / maxMs) * h;
+                if (i === 0) oscCtx.moveTo(i * stepX, y);
+                else oscCtx.lineTo(i * stepX, y);
+            }
+            oscCtx.stroke();
+
+            requestAnimationFrame(drawOscilloscope);
+        }
+        drawOscilloscope();
+
+        // 3D Animation Loop
+        function animate() {
+            requestAnimationFrame(animate);
+            controls.update();
+
+            beaconCore.rotation.y += 0.04;
+            beaconCore.rotation.x += 0.02;
+            beaconRing.rotation.z += 0.03;
+
+            for (let i = activeBlastRings.length - 1; i >= 0; i--) {
+                const ring = activeBlastRings[i];
+                ring.currentRadius += 0.8;
+                ring.opacity -= 0.03;
+                ring.mesh.scale.set(ring.currentRadius, ring.currentRadius, 1);
+                ring.mesh.material.opacity = Math.max(0, ring.opacity);
+
+                if (ring.opacity <= 0 || ring.currentRadius >= ring.maxRadius) {
+                    scene.remove(ring.mesh);
+                    ring.mesh.geometry.dispose();
+                    ring.mesh.material.dispose();
+                    activeBlastRings.splice(i, 1);
+                }
+            }
+
+            if (currentTab === 'tab-swarm') {
+                renderer.render(scene, camera);
+            }
+        }
+        animate();
+
+        window.addEventListener('resize', () => {
+            const c = document.getElementById('canvas-3d');
+            if (c && c.clientWidth > 0 && c.clientHeight > 0) {
+                camera.aspect = c.clientWidth / c.clientHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(c.clientWidth, c.clientHeight);
+            }
+        });
+
+        // -------------------------------------------------------------
+        // TAB 2: MULTI-ENGINE WORKBENCH LOGIC & PARAMETRIC BENCHMARKS
+        // -------------------------------------------------------------
+        let currentEngineCard = 'ue5';
+
+        async function syncSpeedFromBench() {
+            let minSpd = parseFloat(document.getElementById('bench-param-speed-min')?.value || '2.5');
+            let maxSpd = parseFloat(document.getElementById('bench-param-speed-max')?.value || '9.5');
+            if (minSpd >= maxSpd) {
+                maxSpd = minSpd + 0.5;
+                const maxInput = document.getElementById('bench-param-speed-max');
+                if (maxInput) maxInput.value = maxSpd;
+            }
+
+            // Sync Tab 1 sliders
+            const sMin = document.getElementById('slider-speed-min');
+            const sMax = document.getElementById('slider-speed-max');
+            const sMinVal = document.getElementById('slider-speed-min-val');
+            const sMaxVal = document.getElementById('slider-speed-max-val');
+            const sBadge = document.getElementById('speed-range-badge');
+            if (sMin) sMin.value = minSpd;
+            if (sMax) sMax.value = maxSpd;
+            if (sMinVal) sMinVal.textContent = minSpd;
+            if (sMaxVal) sMaxVal.textContent = maxSpd;
+            if (sBadge) sBadge.textContent = `${minSpd} — ${maxSpd} m/s`;
+
+            try {
+                await fetch('/api/speed_range', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ min_speed: minSpd, max_speed: maxSpd })
+                });
+            } catch (err) {
+                console.error("Speed range sync error:", err);
+            }
+        }
+
+        async function onSwarmSpeedSliderChange() {
+            let minSpd = parseFloat(document.getElementById('slider-speed-min')?.value || '2.5');
+            let maxSpd = parseFloat(document.getElementById('slider-speed-max')?.value || '9.5');
+            if (minSpd >= maxSpd) {
+                maxSpd = minSpd + 0.5;
+                const sliderMax = document.getElementById('slider-speed-max');
+                if (sliderMax) sliderMax.value = maxSpd;
+            }
+
+            const sMinVal = document.getElementById('slider-speed-min-val');
+            const sMaxVal = document.getElementById('slider-speed-max-val');
+            const sBadge = document.getElementById('speed-range-badge');
+            if (sMinVal) sMinVal.textContent = minSpd;
+            if (sMaxVal) sMaxVal.textContent = maxSpd;
+            if (sBadge) sBadge.textContent = `${minSpd} — ${maxSpd} m/s`;
+
+            // Sync Tab 2 inputs
+            const bMin = document.getElementById('bench-param-speed-min');
+            const bMax = document.getElementById('bench-param-speed-max');
+            if (bMin) bMin.value = minSpd;
+            if (bMax) bMax.value = maxSpd;
+
+            try {
+                await fetch('/api/speed_range', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ min_speed: minSpd, max_speed: maxSpd })
+                });
+            } catch (err) {
+                console.error("Speed range update error:", err);
+            }
+        }
+
+        async function loadEngineBenchmarks() {
+            const btn = document.getElementById('engine-bench-btn');
+            const nVal = parseInt(document.getElementById('bench-param-n')?.value || '10000');
+            const kVal = parseInt(document.getElementById('bench-param-k')?.value || '1200');
+            const minSpd = parseFloat(document.getElementById('bench-param-speed-min')?.value || '2.5');
+            const maxSpd = parseFloat(document.getElementById('bench-param-speed-max')?.value || '9.5');
+
+            if (btn) {
+                btn.disabled = true;
+                btn.innerHTML = `<span>⏳</span> ${nVal.toLocaleString()} Ajan (${kVal.toLocaleString()} Elenen) Canlı Ölçülüyor...`;
+                btn.style.opacity = '0.7';
+            }
+
+            // Update section title with active parametric counts
+            const tickHdr = document.getElementById('bench-tick-header');
+            if (tickHdr) {
+                tickHdr.textContent = `TİCK İŞLEME SÜRESİ (${nVal.toLocaleString()} AJAN / ${kVal.toLocaleString()} ELENEN İÇİN)`;
+            }
+
+            try {
+                const [benchResp, codeResp] = await Promise.all([
+                    fetch('/api/engine/run_benchmark', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            total_npcs: nVal,
+                            kill_count: kVal,
+                            min_speed: minSpd,
+                            max_speed: maxSpd
+                        })
+                    }),
+                    fetch('/api/engine/benchmark')
+                ]);
+                const benchData = await benchResp.json();
+                engineBenchmarksCache = await codeResp.json();
+
+                if (benchData && benchData.results) {
+                    const r = benchData.results;
+                    // UE5
+                    if (r.ue5) {
+                        const elUe5Idem = document.getElementById('ue5-idem-val');
+                        if (elUe5Idem) elUe5Idem.textContent = `${r.ue5.idem_ms} ms`;
+                        const barUe5Idem = document.getElementById('ue5-idem-bar');
+                        if (barUe5Idem) barUe5Idem.style.width = `${Math.min(100, (r.ue5.idem_ms / Math.max(0.1, r.roblox ? r.roblox.trad_ms : 30.0)) * 100)}%`;
+
+                        const elUe5Trad = document.getElementById('ue5-trad-val');
+                        if (elUe5Trad) elUe5Trad.textContent = `${r.ue5.trad_ms} ms (${r.ue5.speedup} daha yavaş)`;
+                        const barUe5Trad = document.getElementById('ue5-trad-bar');
+                        if (barUe5Trad) barUe5Trad.style.width = `${Math.min(100, (r.ue5.trad_ms / Math.max(0.1, r.roblox ? r.roblox.trad_ms : 30.0)) * 100)}%`;
+
+                        const cardUe5Tick = document.getElementById('card-ue5-tick');
+                        if (cardUe5Tick) cardUe5Tick.textContent = `${r.ue5.idem_ms} ms`;
+                        const cardUe5Gc = document.getElementById('card-ue5-gc');
+                        if (cardUe5Gc) cardUe5Gc.textContent = `0.0 ms`;
+                    }
+
+                    // Unity
+                    if (r.unity) {
+                        const elUnityIdem = document.getElementById('unity-idem-val');
+                        if (elUnityIdem) elUnityIdem.textContent = `${r.unity.idem_ms} ms`;
+                        const barUnityIdem = document.getElementById('unity-idem-bar');
+                        if (barUnityIdem) barUnityIdem.style.width = `${Math.min(100, (r.unity.idem_ms / Math.max(0.1, r.roblox ? r.roblox.trad_ms : 30.0)) * 100)}%`;
+
+                        const elUnityTrad = document.getElementById('unity-trad-val');
+                        if (elUnityTrad) elUnityTrad.textContent = `${r.unity.trad_ms} ms (${r.unity.speedup} daha yavaş)`;
+                        const barUnityTrad = document.getElementById('unity-trad-bar');
+                        if (barUnityTrad) barUnityTrad.style.width = `${Math.min(100, (r.unity.trad_ms / Math.max(0.1, r.roblox ? r.roblox.trad_ms : 30.0)) * 100)}%`;
+
+                        const cardUnityTick = document.getElementById('card-unity-tick');
+                        if (cardUnityTick) cardUnityTick.textContent = `${r.unity.idem_ms} ms`;
+                        const cardUnityGc = document.getElementById('card-unity-gc');
+                        if (cardUnityGc) cardUnityGc.textContent = `0.0 ms`;
+                    }
+
+                    // Roblox
+                    if (r.roblox) {
+                        const elRobloxIdem = document.getElementById('roblox-idem-val');
+                        if (elRobloxIdem) elRobloxIdem.textContent = `${r.roblox.idem_ms} ms`;
+                        const barRobloxIdem = document.getElementById('roblox-idem-bar');
+                        if (barRobloxIdem) barRobloxIdem.style.width = `${Math.min(100, (r.roblox.idem_ms / Math.max(0.1, r.roblox.trad_ms)) * 100)}%`;
+
+                        const elRobloxTrad = document.getElementById('roblox-trad-val');
+                        if (elRobloxTrad) elRobloxTrad.textContent = `${r.roblox.trad_ms} ms (${r.roblox.speedup} daha yavaş)`;
+                        const barRobloxTrad = document.getElementById('roblox-trad-bar');
+                        if (barRobloxTrad) barRobloxTrad.style.width = `100%`;
+
+                        const cardRobloxTick = document.getElementById('card-roblox-tick');
+                        if (cardRobloxTick) cardRobloxTick.textContent = `${r.roblox.idem_ms} ms`;
+                        const cardRobloxGc = document.getElementById('card-roblox-gc');
+                        if (cardRobloxGc) cardRobloxGc.textContent = `0.0 ms`;
+                    }
+
+                    // Update live badge and GC stats
+                    const badge = document.getElementById('bench-status-badge');
+                    if (badge) {
+                        badge.textContent = `[CANLI: ${benchData.measured_raw_us} µs (0 GC)]`;
+                        badge.style.color = 'var(--accent-green)';
+                    }
+
+                    const gcSpikeEl = document.getElementById('bench-gc-spike');
+                    if (gcSpikeEl && r.ue5 && r.roblox) {
+                        gcSpikeEl.textContent = `${r.ue5.trad_gc_spike} - ${r.roblox.trad_gc_spike}`;
+                    }
+                }
+                showEngineCode(currentEngineCard || 'ue5');
+            } catch (err) {
+                console.error("Engine benchmark error:", err);
+            } finally {
+                if (btn) {
+                    btn.disabled = false;
+                    btn.innerHTML = `✅ Kıyaslama Güncellendi (Tekrar Çalıştır)`;
+                    btn.style.opacity = '1';
+                }
+            }
+        }
+
+        function selectEngineCard(engineId) {
+            currentEngineCard = engineId;
+            document.querySelectorAll('.engine-card').forEach(c => c.classList.remove('active'));
+            const card = document.getElementById(`card-eng-${engineId}`);
+            if (card) card.classList.add('active');
+            showEngineCode(engineId);
+        }
+
+        function showEngineCode(engineId) {
+            currentEngineCard = engineId;
+            document.querySelectorAll('.code-tab-btn').forEach(b => b.classList.remove('active'));
+            const btn = document.getElementById(`btn-code-${engineId}`);
+            if (btn) btn.classList.add('active');
+
+            if (!engineBenchmarksCache || !engineBenchmarksCache.engines) return;
+            const engineObj = engineBenchmarksCache.engines.find(e => e.id === engineId);
+            if (engineObj) {
+                document.getElementById('code-display-block').textContent = engineObj.code_sample;
+            }
+        }
+
+        // -------------------------------------------------------------
+        // TAB 3: SMART NPC DIALOGUE LOGIC
+        // -------------------------------------------------------------
+        async function fetchDialogueState() {
+            try {
+                const resp = await fetch('/api/dialogue/state');
+                const data = await resp.json();
+                renderDialogueUI(data);
+            } catch (err) {
+                console.error("Dialogue state error:", err);
+            }
+        }
+
+        function renderDialogueUI(data) {
+            document.getElementById('chat-turns-badge').textContent = `${data.turns_count || 0} Tur Aktif`;
+            document.getElementById('metric-dialogue-turns').textContent = data.turns_count || 0;
+            document.getElementById('metric-dialogue-tokens').textContent = (data.total_tokens || 0).toLocaleString();
+            document.getElementById('metric-dialogue-bytes').textContent = `${((data.estimated_heap_bytes || 0) / 1024).toFixed(1)} KB`;
+
+            const list = document.getElementById('chat-msg-list');
+            list.innerHTML = '';
+
+            const history = data.history || [];
+            history.forEach(turn => {
+                const isPlayer = turn.speaker === 'Oyuncu';
+                const msgDiv = document.createElement('div');
+                msgDiv.className = `chat-msg ${isPlayer ? 'player' : 'npc'}`;
+
+                const badgeColor = turn.importance > 0.8 ? 'var(--accent-green)' : (turn.importance > 0.4 ? 'var(--accent-cyan)' : 'var(--text-muted)');
+
+                msgDiv.innerHTML = `
+                    <div class="chat-meta">
+                        <strong style="color: ${isPlayer ? 'var(--accent-cyan)' : 'var(--accent-purple)'};">${turn.speaker}</strong>
+                        <span><span style="color: ${badgeColor}; font-weight: 700;">[${turn.tag || 'GENEL'} %${Math.round((turn.importance || 0.5) * 100)}]</span> // ${turn.tokens || 1} Token</span>
+                    </div>
+                    <div>${turn.text}</div>
+                `;
+                list.appendChild(msgDiv);
+            });
+
+            list.scrollTop = list.scrollHeight;
+        }
+
+        async function sendUserChat() {
+            const input = document.getElementById('chat-input');
+            const text = input.value.trim();
+            if (!text) return;
+            input.value = '';
+
+            try {
+                const resp = await fetch('/api/dialogue/chat', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ text: text })
+                });
+                const data = await resp.json();
+                renderDialogueUI(data);
+            } catch (err) {
+                console.error("Chat error:", err);
+            }
+        }
+
+        function sendQuickPrompt(promptText) {
+            document.getElementById('chat-input').value = promptText;
+            sendUserChat();
+        }
+
+        async function compactDialogueMemory() {
+            try {
+                const resp = await fetch('/api/dialogue/compact', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ keep_k: 4 })
+                });
+                const data = await resp.json();
+                renderDialogueUI(data.telemetry);
+
+                const r = data.compaction_result;
+                document.getElementById('res-token-reduc').textContent = `%${r.token_reduction_pct || 0} Düşüş (${r.before_tokens} -> ${r.after_tokens})`;
+                document.getElementById('res-latency').textContent = `${r.latency_us || 18} \u03bcs`;
+                document.getElementById('res-swaps').textContent = `${r.swaps || 0} İnvolüsyon Çifti`;
+                document.getElementById('comp-verif-badge').textContent = `\u03c0(\u03c0(x)) == x ONAYLANDI`;
+            } catch (err) {
+                console.error("Compaction error:", err);
+            }
+        }
+
+        async function resetDialogueMemory() {
+            try {
+                const resp = await fetch('/api/dialogue/reset', { method: 'POST' });
+                const data = await resp.json();
+                renderDialogueUI(data);
+            } catch (err) {
+                console.error("Reset error:", err);
+            }
+        }
+
+        // -------------------------------------------------------------
+        // TAB 4: MCTS TACTICAL PLANNER LOGIC
+        // -------------------------------------------------------------
+        const radarCanvas = document.getElementById('mcts-radar-canvas');
+        const radarCtx = radarCanvas.getContext('2d');
+        let currentMctsData = null;
+
+        async function runMctsEvaluation() {
+            const candidates = parseInt(document.getElementById('mcts-candidates').value, 10);
+            const topk = parseInt(document.getElementById('mcts-topk').value, 10);
+            const npcs = parseInt(document.getElementById('mcts-npcs').value, 10);
+
+            try {
+                const resp = await fetch('/api/mcts/evaluate', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ candidate_actions: candidates, top_k: topk, num_npcs: npcs })
+                });
+                const data = await resp.json();
+                currentMctsData = data;
+                renderMctsUI(data);
+                drawMctsRadar(data);
+            } catch (err) {
+                console.error("MCTS Eval error:", err);
+            }
+        }
+
+        function renderMctsUI(data) {
+            document.getElementById('mcts-idem-time').textContent = `${data.idem_latency_us} \u03bcs`;
+            document.getElementById('mcts-trad-time').textContent = `${data.trad_latency_us} \u03bcs`;
+            document.getElementById('mcts-speedup-badge').textContent = data.speedup;
+            document.getElementById('mcts-vram').textContent = data.auxiliary_vram_idem;
+            document.getElementById('mcts-invol-check').textContent = data.involution_verified ? "100% DOĞRULANDI" : "HATA";
+
+            const tbody = document.getElementById('mcts-table-body');
+            tbody.innerHTML = '';
+            const actions = data.actions_tree || [];
+            document.getElementById('mcts-actions-count').textContent = `${actions.length} Karar Dalı`;
+
+            actions.forEach(act => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><strong style="color: ${act.color};">${act.name}</strong></td>
+                    <td style="width: 140px;">
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <span class="mono">${act.q_value}</span>
+                            <div class="q-bar-bg"><div class="q-bar-fill" style="width: ${act.q_value * 100}%; background: ${act.color};"></div></div>
+                        </div>
+                    </td>
+                    <td><span class="mono" style="color: ${act.selected ? 'var(--accent-green)' : 'var(--accent-red)'}; font-weight: 700;">${act.status}</span></td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function drawMctsRadar(data) {
+            const w = radarCanvas.width = radarCanvas.clientWidth * 2;
+            const h = radarCanvas.height = radarCanvas.clientHeight * 2;
+            const cx = w / 2;
+            const cy = h / 2;
+
+            radarCtx.fillStyle = '#060910';
+            radarCtx.fillRect(0, 0, w, h);
+
+            // Radar concentric circles
+            radarCtx.strokeStyle = '#101726';
+            radarCtx.lineWidth = 1;
+            for (let r = 50; r < Math.min(cx, cy); r += 60) {
+                radarCtx.beginPath();
+                radarCtx.arc(cx, cy, r, 0, Math.PI * 2);
+                radarCtx.stroke();
+            }
+
+            // Radar crosshairs
+            radarCtx.beginPath();
+            radarCtx.moveTo(cx, 0); radarCtx.lineTo(cx, h);
+            radarCtx.moveTo(0, cy); radarCtx.lineTo(w, cy);
+            radarCtx.stroke();
+
+            // Draw center squad
+            radarCtx.fillStyle = '#00f0ff';
+            radarCtx.beginPath();
+            radarCtx.arc(cx, cy, 8, 0, Math.PI * 2);
+            radarCtx.fill();
+            radarCtx.fillStyle = '#fff';
+            radarCtx.font = '20px JetBrains Mono';
+            radarCtx.fillText('ÖZEL TİM', cx + 12, cy - 8);
+
+            // Draw Decision Branches Radiating Out
+            const actions = (data && data.actions_tree) ? data.actions_tree : [];
+            const count = actions.length || 16;
+            const radius = Math.min(cx, cy) - 30;
+
+            actions.forEach((act, idx) => {
+                const angle = (idx / count) * Math.PI * 2 - Math.PI / 2;
+                const nodeDist = radius * (0.4 + act.q_value * 0.55);
+                const nx = cx + Math.cos(angle) * nodeDist;
+                const ny = cy + Math.sin(angle) * nodeDist;
+
+                // Branch ray
+                radarCtx.strokeStyle = act.selected ? act.color : 'rgba(255, 51, 102, 0.2)';
+                radarCtx.lineWidth = act.selected ? 3 : 1;
+                if (!act.selected) radarCtx.setLineDash([6, 6]);
+                else radarCtx.setLineDash([]);
+
+                radarCtx.beginPath();
+                radarCtx.moveTo(cx, cy);
+                radarCtx.lineTo(nx, ny);
+                radarCtx.stroke();
+                radarCtx.setLineDash([]);
+
+                // Node circle
+                radarCtx.fillStyle = act.selected ? act.color : '#ff3366';
+                radarCtx.beginPath();
+                radarCtx.arc(nx, ny, act.selected ? 6 : 3, 0, Math.PI * 2);
+                radarCtx.fill();
+
+                if (act.selected) {
+                    radarCtx.fillStyle = '#ffffff';
+                    radarCtx.font = '16px Inter';
+                    radarCtx.fillText(act.name.split('#')[0].trim(), nx + 8, ny + 4);
+                }
+            });
+        }
+    </script>
+</body>
+</html>

@@ -2,6 +2,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage[margin=0.75in]{geometry}
 \usepackage{amsmath,amssymb,amsthm}
+\usepackage{graphicx}
 \usepackage{booktabs}
 \usepackage{algorithm}
 \usepackage{algpseudocode}
@@ -116,6 +117,7 @@ To evaluate IdemNPC in production conditions, we benchmarked swarm tactical deci
 \centering
 \caption{IdemNPC Swarm Decision Latency on Blackwell GPU ($sm\_120$)}
 \label{tab:results}
+\resizebox{\columnwidth}{!}{%
 \begin{tabular}{lcccc}
 \toprule
 \textbf{Game Scenario} & \textbf{NPCs} & \textbf{Candidates} & \textbf{IdemNPC} & \textbf{Aux VRAM} \\
@@ -125,13 +127,17 @@ Battlefield Platoon & 256 & 32 ($K=8$) & $13.33\,\text{ms}$ & \textbf{0 B} \\
 Open-World Swarm & 512 & 32 ($K=8$) & $27.53\,\text{ms}$ & \textbf{0 B} \\
 Massive War Sim & 1024 & 64 ($K=16$) & $54.01\,\text{ms}$ & \textbf{0 B} \\
 \bottomrule
-\end{tabular}
+\end{tabular}%
+}
 \end{table}
 
 As shown in Table~\ref{tab:results}, IdemNPC achieves complete decision tree compaction across 64 NPCs in $3.51\,\text{ms}$ and 1024 NPCs in $54.01\,\text{ms}$ while allocating exactly \textbf{0 bytes} of auxiliary memory. Standard out-of-place gather operations allocate temporary buffers on each frame, causing VRAM fragmentation and GC pauses during heavy game rendering.
 
 \section{Patent and Legal Notice}
 The algorithms, mathematical structures, in-place involution transpositions, and hardware compaction mechanisms described in this paper are the intellectual property of Dr.~A.~Emre \c{C}ET\.{I}N and are protected under \textbf{U.S. Patent Application No. 64/148,668} (Confirmation No. 5890). Commercial exploitation in game engines, rendering toolkits, or simulation frameworks requires licensing.
+
+\section*{Acknowledgment}
+The author gratefully acknowledges the assistance of advanced agentic AI pair-programming tools (Google Antigravity / Gemini) for engineering support in C++20/CUDA kernel optimization, automated hardware benchmark harness scripting, and manuscript \LaTeX\ typesetting. The underlying mathematical theory of idempotent involution permutations ($f(f(x))=f(x)$, $\pi = \pi^{-1}$) and the foundational systems architectures originate from the author's prior theoretical work (A.~E. {\c{C}}etin, arXiv:1307.3877, arXiv:1301.2046). The author conceived the research design, verified all empirical results on physical hardware, and holds full responsibility for the scientific integrity, claims, and conclusions presented in this work.
 
 \begin{thebibliography}{99}
 \bibitem{cetin2026idempotent}

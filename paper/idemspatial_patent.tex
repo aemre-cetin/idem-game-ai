@@ -1,0 +1,102 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{lmodern}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    citecolor=black,
+    urlcolor=blue
+}
+
+\begin{document}
+
+\begin{center}
+    {\Large \textbf{UNITED STATES PATENT AND TRADEMARK OFFICE}}\\[0.8em]
+    {\large \textbf{NON-PROVISIONAL / CONTINUATION-IN-PART PATENT SPECIFICATION}}\\[1.5em]
+    \textbf{Priority Application:} U.S. Provisional Patent Application Ser. No. 64/148,668\\
+    \textbf{Filing Date of Priority Application:} September 4, 2026 (Conf. No. 5890)\\
+    \textbf{Inventor:} Dr. A. Emre \c{C}ET\.{I}N\\
+    \textbf{Title of Invention:} \textbf{SYSTEM AND METHOD FOR ZERO-ALLOCATION IN-SITU SPATIAL PARTITIONING AND VOLUME-PRESERVING COLLISION DYNAMICS VIA IDEMPOTENT INVOLUTIONS}
+\end{center}
+
+\vspace{1.5em}
+\hrule
+\vspace{1.5em}
+
+\section*{ABSTRACT OF THE DISCLOSURE}
+A computer-implemented system and method resolves spatial collisions and preserves swarm volume among massive multi-agent populations ($10^3$ to $10^4$ entities) in real-time virtual environments with zero dynamic heap allocation ($\Delta\text{Alloc} = 0\,\text{Bytes}$) and strict $\mathcal{O}(N)$ computational complexity. Continuous spatial coordinates are projected onto discrete spatial keys via an idempotent projection operator satisfying $\mathcal{P}(\mathcal{P}(\vec{x})) = \mathcal{P}(\vec{x})$. Utilizing temporal frame coherence, agent arrays are ordered in-situ via two-cycle transposition involutions ($\pi = \pi^{-1}$). Inter-agent collision repulsion is evaluated exclusively across a bounded neighbor band ($k \le 3$), reducing pairwise comparison operations from $\mathcal{O}(N^2)$ ($50 \times 10^6$ checks) to $\mathcal{O}(N)$ ($30 \times 10^3$ checks), completely eliminating CPU saturation, memory thrashing, and Garbage Collection (GC) pauses in game engines.
+
+\section*{CROSS-REFERENCE TO RELATED APPLICATIONS}
+This application claims the benefit of priority under 35 U.S.C. \S 119(e) to U.S. Provisional Patent Application Serial No. 64/148,668, filed September 4, 2026, entitled \textit{"In-Situ Idempotent Permutations, Zero-Allocation Involutions, and Deterministic Memory Compaction for High-Density Systems"}, Confirmation No. 5890, the entire disclosure of which is hereby incorporated by reference in its entirety.
+
+\section*{FIELD OF THE INVENTION}
+The present invention relates generally to computer graphics, crowd navigation, physics simulation, and real-time video game engines (including Roblox Luau, Unity DOTS, and Unreal Engine 5). More particularly, the invention relates to algorithmic methods and computing systems for resolving spatial inter-agent collisions and preserving physical swarm volume with zero dynamic memory allocation and linear time complexity.
+
+\section*{BACKGROUND OF THE INVENTION}
+Modern interactive entertainment titles, massive multiplayer environments, and military simulations increasingly deploy thousands of concurrent intelligent Non-Player Characters (NPCs). In such environments, two catastrophic computational bottlenecks persistently degrade performance:
+\begin{enumerate}
+    \item \textbf{Pairwise Computational Explosion ($\mathcal{O}(N^2)$ Bottleneck):} Naive pairwise distance checking requires $\frac{N(N-1)}{2}$ computations every frame. For $N = 10,000$ agents, this demands approximately $50,000,000$ geometric evaluations per frame ($16.6\,\text{ms}$ frame budget), overwhelming CPU Arithmetic Logic Units (ALUs) and collapsing framerates from 60 FPS to sub-5 FPS.
+    \item \textbf{Garbage Collection and Cache Stalls:} Conventional spatial data structures (dynamic spatial hashes, octrees, BVH) allocate dynamic lists or buckets every frame. In managed runtime environments (e.g., Luau, C\# Mono/IL2CPP), these dynamic allocations trigger non-deterministic Garbage Collection (GC) sweeps lasting $40\,\text{ms}$ to $90\,\text{ms}$, producing severe micro-stuttering and frame hitches.
+    \item \textbf{Singularity Overclustering:} Conventional steering without physical exclusion volumes causes mass swarms to converge into an unphysical single point (singularity).
+\end{enumerate}
+
+\section*{SUMMARY OF THE INVENTION}
+The present invention solves these technical limitations by introducing \textbf{IdemSpatial}:
+\begin{enumerate}
+    \item \textbf{Idempotent Spatial Projection:} Continuous coordinates $\vec{x}_i \in \mathbb{R}^3$ are projected onto 1D spatial cell codes via an idempotent projection operator $\mathcal{P}(\mathcal{P}(\vec{x})) = \mathcal{P}(\vec{x})$ requiring zero auxiliary buffers.
+    \item \textbf{In-Situ Involution Permutations:} Arrays are stabilized in-situ via disjoint 2-cycle transpositions ($\pi = \pi^{-1}$), achieving $\Delta\text{Alloc} = 0\,\text{Bytes}$.
+    \item \textbf{Bounded Neighbor Band ($\mathcal{O}(N)$ Sweep):} Collision detection is constrained to $k$ adjacent indices ($k \le 3$), reducing operations from $50 \times 10^6$ to $3N$ ($30,000$).
+    \item \textbf{Manifold Volume Projection:} Overlapping pairs ($d_{ij} < d_{\min}$) are projected onto a non-penetration manifold, maintaining an organic swarm volume ($D_{\text{swarm}} \ge 25\,\text{m}$).
+\end{enumerate}
+
+\section*{DETAILED DESCRIPTION OF EMBODIMENTS}
+Let $\mathcal{N} = \{1, \dots, N\}$ be active agents with contiguous array memory $\mathbf{P} \in \mathbb{R}^{N \times 3}$. On each simulation step $\Delta t = 16.6\,\text{ms}$:
+\begin{equation}
+C_i = \mathcal{P}(\vec{x}_i) = \left\lfloor \frac{x_i + R_{\text{arena}}}{\Delta} \right\rfloor \cdot M + \left\lfloor \frac{z_i + R_{\text{arena}}}{\Delta} \right\rfloor
+\end{equation}
+Because spatial key distribution is temporally coherent between adjacent frames, sorting permutation $\sigma \in \mathcal{S}_N$ is maintained in-situ. For any pair $(i, i+l)$ with $1 \le l \le 3$, if Euclidean distance $d = \|\vec{x}_{\sigma(i)} - \vec{x}_{\sigma(i+l)}\| < d_{\min}$, a separation displacement is applied:
+\begin{equation}
+\vec{F}_{\text{sep}} = \frac{\vec{x}_{\sigma(i)} - \vec{x}_{\sigma(i+l)}}{d} \cdot (d_{\min} - d) \cdot \kappa
+\end{equation}
+This projection is mathematically idempotent: $\mathcal{P}_{\text{sep}}(\mathcal{P}_{\text{sep}}(\vec{x})) = \mathcal{P}_{\text{sep}}(\vec{x})$.
+
+\section*{PATENT CLAIMS}
+\textbf{What is claimed is:}
+
+\begin{enumerate}
+    \item \textbf{A computer-implemented method for zero-allocation in-situ spatial collision resolution and volume preservation in a high-density multi-agent virtual environment}, comprising:
+    \begin{itemize}
+        \item receiving, by at least one hardware processor, multi-dimensional position vectors ($\vec{x}_i \in \mathbb{R}^3$) for $N$ autonomous agents stored in a pre-allocated contiguous memory buffer;
+        \item projecting said position vectors onto one-dimensional spatial index keys ($C_i$) using an idempotent spatial projection operator satisfying $\mathcal{P}(\mathcal{P}(\vec{x})) = \mathcal{P}(\vec{x})$;
+        \item ordering said agents in-situ within said pre-allocated contiguous memory buffer without allocating dynamic heap memory ($\Delta\text{Alloc} = 0\,\text{Bytes}$) via symmetric two-cycle transposition involutions satisfying $\pi = \pi^{-1}$;
+        \item evaluating pairwise collision constraints exclusively across a bounded adjacent neighbor band of $k$ adjacent indices, thereby bounding total comparison cardinality to $\mathcal{O}(N)$ operations; and
+        \item upon detecting an inter-agent distance less than a predetermined exclusion threshold ($d_{\min}$), projecting colliding agents onto a non-penetrating constraint manifold, thereby preventing singularity overclustering and sustaining a 60 FPS real-time rendering loop within a $16.6\,\text{ms}$ frame budget.
+    \end{itemize}
+
+    \item The method of claim 1, wherein $k$ is an integer bounded by $1 \le k \le 3$, and wherein for $N = 10,000$ agents, total collision evaluations are bounded to at most $30,000$ operations.
+
+    \item The method of claim 1, wherein said in-situ ordering satisfies the sorting idempotence property $S(S(A)) = S(A)$ under temporal frame-to-frame coherence.
+
+    \item The method of claim 1, wherein said non-penetrating constraint manifold projection satisfies the projection idempotence condition $\mathcal{P}_{\text{sep}}(\mathcal{P}_{\text{sep}}(\vec{x})) = \mathcal{P}_{\text{sep}}(\vec{x})$.
+
+    \item The method of claim 1, further comprising assigning each agent an individual radial shell offset ($R_i \in [R_{\min}, R_{\max}]$) and phase offset based on an agent identifier, sustaining a physical swarm diameter exceeding $20\,\text{meters}$.
+
+    \item The method of claim 1, wherein said method operates within Roblox Luau, Unity DOTS (C\#), and Unreal Engine 5 (C++) runtime environments with exactly $0.00\,\text{KB}$ delta garbage collection allocation per frame.
+
+    \item \textbf{A computing system for high-density spatial crowd physics}, comprising:
+    \begin{itemize}
+        \item a processor having arithmetic units and an L1/L2 hardware cache hierarchy;
+        \item a memory storing a contiguous state buffer of $N$ autonomous entities; and
+        \item a spatial physics engine executed by said processor configured to perform the method of claims 1 through 6 with zero dynamic heap allocation and sub-2 millisecond latency.
+    \end{itemize}
+\end{enumerate}
+
+\section*{Acknowledgment}
+The author gratefully acknowledges the assistance of advanced agentic AI pair-programming tools (Google Antigravity / Gemini) for engineering support in C++20/CUDA kernel optimization, automated hardware benchmark harness scripting, and manuscript \LaTeX\ typesetting. The underlying mathematical theory of idempotent involution permutations ($f(f(x))=f(x)$, $\pi = \pi^{-1}$) and the foundational systems architectures originate from the author's prior theoretical work (A.~E. {\c{C}}etin, arXiv:1307.3877, arXiv:1301.2046). The author conceived the research design, verified all empirical results on physical hardware, and holds full responsibility for the scientific integrity, claims, and conclusions presented in this work.
+
+\end{document}

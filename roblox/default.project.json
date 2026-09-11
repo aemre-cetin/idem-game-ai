@@ -1,0 +1,19 @@
+{
+  "name": "IdemNPC",
+  "tree": {
+    "$className": "Folder",
+    "IdemNPC": {
+      "$path": "init.luau",
+      "IdemNPC": {
+        "$path": "IdemNPC.luau"
+      },
+      "IdemSwarm": {
+        "$path": "IdemSwarm.luau"
+      },
+      "IdemSpatialGrid": {
+        "$path": "IdemSpatialGrid.luau"
+      }
+    }
+  }
+}
+

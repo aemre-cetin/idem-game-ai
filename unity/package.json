@@ -1,0 +1,28 @@
+{
+  "name": "com.aemrecetin.idemnpc",
+  "version": "0.1.0",
+  "displayName": "IdemNPC - Zero-Alloc Game AI",
+  "description": "Zero-allocation in-place AI compactor and swarm decision engine for Unity DOTS, ECS, and GameObject architectures. Eliminates GC spikes and accelerates massive crowd simulations.",
+  "unity": "2022.3",
+  "unityRelease": "0f1",
+  "keywords": [
+    "ai",
+    "npc",
+    "dots",
+    "ecs",
+    "burst",
+    "swarm",
+    "zero-alloc"
+  ],
+  "author": {
+    "name": "Dr. A. Emre ÇETİN",
+    "email": "aemre.cetin@gmail.com",
+    "url": "https://github.com/aemre-cetin/idem-game-ai"
+  },
+  "dependencies": {
+    "com.unity.burst": "1.8.11",
+    "com.unity.collections": "2.2.0",
+    "com.unity.mathematics": "1.3.1"
+  }
+}
+

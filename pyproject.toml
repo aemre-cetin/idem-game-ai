@@ -25,5 +25,5 @@ dependencies = [
 idemnpc = "idempotent_game_ai.cli:main"
 
 [project.urls]
-"Homepage" = "https://github.com/aemre-cetin/idempotent-game-ai"
-"Patent Notice" = "https://github.com/aemre-cetin/idempotent-game-ai#patent-notice"
+"Homepage" = "https://github.com/aemre-cetin/idem-game-ai"
+"Patent Notice" = "https://github.com/aemre-cetin/idem-game-ai#patent-notice"
