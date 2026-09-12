@@ -10,9 +10,30 @@ U.S. Patent Application No. 64/148,668 ("Patent Pending", Conf. No. 5890)
 
 import asyncio
 import json
+import sys
 import time
 from pathlib import Path
 from typing import Dict, Any, Optional
+
+# Windows ProactorEventLoop WinError 10054 ConnectionResetError fix
+if sys.platform == "win32":
+    try:
+        asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+    except Exception:
+        pass
+    try:
+        from asyncio.proactor_events import _ProactorBasePipeTransport
+        if not getattr(_ProactorBasePipeTransport, "_patched_win10054", False):
+            _orig_call_connection_lost = _ProactorBasePipeTransport._call_connection_lost
+            def _safe_call_connection_lost(self, exc):
+                try:
+                    _orig_call_connection_lost(self, exc)
+                except (ConnectionResetError, OSError):
+                    pass
+            _ProactorBasePipeTransport._call_connection_lost = _safe_call_connection_lost
+            _ProactorBasePipeTransport._patched_win10054 = True
+    except Exception:
+        pass
 
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.responses import HTMLResponse, JSONResponse
@@ -548,7 +569,7 @@ async def websocket_telemetry(websocket: WebSocket):
             elapsed = time.perf_counter() - t_start
             sleep_time = max(0.001, dt - elapsed)
             await asyncio.sleep(sleep_time)
-    except WebSocketDisconnect:
+    except (WebSocketDisconnect, ConnectionResetError):
         pass
     except Exception as e:
         print(f"WebSocket telemetry error: {e}")
