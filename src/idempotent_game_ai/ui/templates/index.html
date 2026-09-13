@@ -38,6 +38,78 @@
             user-select: none;
         }
 
+        /* Universal Idem Tech Tooltip */
+        #idem-tech-tooltip {
+            position: fixed;
+            display: none;
+            z-index: 999999;
+            width: 360px;
+            max-width: 90vw;
+            padding: 14px 16px;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(168, 85, 247, 0.5);
+            border-radius: 12px;
+            box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.8), 0 0 20px 0 rgba(168, 85, 247, 0.25);
+            font-family: 'JetBrains Mono', monospace, sans-serif;
+            color: #e2e8f0;
+            pointer-events: none;
+            transition: opacity 0.15s ease;
+        }
+        .idem-tt-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            padding-bottom: 6px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .idem-tt-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: #c084fc;
+        }
+        .idem-tt-badge-patent {
+            font-size: 9px;
+            background: rgba(168, 85, 247, 0.2);
+            color: #d8b4fe;
+            border: 1px solid rgba(168, 85, 247, 0.4);
+            padding: 2px 6px;
+            border-radius: 4px;
+            text-transform: uppercase;
+        }
+        .idem-tt-meta {
+            font-size: 11px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            margin-bottom: 8px;
+        }
+        .idem-tt-row {
+            display: flex;
+            align-items: baseline;
+            gap: 6px;
+        }
+        .idem-tt-label {
+            color: #94a3b8;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        .idem-tt-val {
+            color: #f8fafc;
+        }
+        .idem-tt-desc {
+            font-size: 11px;
+            color: #cbd5e1;
+            line-height: 1.45;
+            background: rgba(0, 0, 0, 0.25);
+            padding: 8px;
+            border-radius: 6px;
+            border-left: 2px solid #a855f7;
+            font-family: 'Inter', sans-serif;
+        }
+
         body {
             background-color: var(--bg-base);
             color: var(--text-primary);
@@ -859,16 +931,40 @@
 
     <!-- Studio Navigation Tabs -->
     <div class="tabs-nav">
-        <button class="tab-btn active" id="btn-tab-swarm" onclick="switchTab('tab-swarm', this)">
+        <button class="tab-btn active" id="btn-tab-swarm" onclick="switchTab('tab-swarm', this)"
+            data-tech-title="3D Sürü & Devasa Kalabalık (Swarm Arena)"
+            data-tech-patent="Spatial Permutation Octree Engine"
+            data-tech-pkg="idempotent-game-ai"
+            data-tech-core="Idempotent Collision Resolution, SIMD Flocking, Spatial Grid Permutation"
+            data-tech-gain="10,000+ Ajan @ 120 FPS, 0 Pointer Allocation, Sıfır Bellek Şişmesi"
+            data-tech-desc="Reynolds flocking kuralları ve elastik çarpışmaları idempotent uzamsal permütasyon grid'iyle çözer; binlerce ajanın sıralı veya eşzamanlı çarpışmasında deterministik sonuç üretir.">
             <span>⚔️</span> 1. 3D Sürü & Devasa Kalabalık (Swarm Arena)
         </button>
-        <button class="tab-btn" id="btn-tab-engine" onclick="switchTab('tab-engine', this)">
+        <button class="tab-btn" id="btn-tab-engine" onclick="switchTab('tab-engine', this)"
+            data-tech-title="Çoklu Motor Canlı Tezgâhı (UE5 / Unity / Roblox)"
+            data-tech-patent="Cross-Engine Zero-Copy Protocol"
+            data-tech-pkg="idempotent-game-ai"
+            data-tech-core="Shared Memory IPC, FlatBuffers / Zero-Copy Structs, Live Socket Pipeline"
+            data-tech-gain="< 1 ms Çapraz Motor Gecikmesi, Unreal Engine 5 & Unity Çift Yönlü Senkronizasyon"
+            data-tech-desc="Unreal Engine 5 C++ ve Unity C# eklentileriyle doğrudan paylaşımlı bellek (shm) üzerinden konuşur; oyun dünyası simülasyonunu harici Python/C++ hızlandırıcıyla bağlar.">
             <span>🕹️</span> 2. Çoklu Motor Canlı Tezgâhı (UE5 / Unity / Roblox)
         </button>
-        <button class="tab-btn" id="btn-tab-dialogue" onclick="switchTab('tab-dialogue', this)">
+        <button class="tab-btn" id="btn-tab-dialogue" onclick="switchTab('tab-dialogue', this)"
+            data-tech-title="Akıllı NPC Diyalog & Bağlam Kompaktörü"
+            data-tech-patent="In-Situ Conversation State Reduction"
+            data-tech-pkg="idempotent-game-ai, idempotent-lang"
+            data-tech-core="KV Compact Tree, Semantic Memory Projection, Zero-Redundancy History"
+            data-tech-gain="%75 Token Tasarrufu, Sıfır Halüsinasyonlu NPC Hafızası, 10x Hızlı İstem"
+            data-tech-desc="Açık dünya NPC'lerinin konuşma geçmişini idempotent semantik projeksiyonla küçülterek LLM bağlam penceresini şişirmeden 100+ saatlik oyun içi hafıza sürekliliği sunar.">
             <span>🧠</span> 3. Akıllı NPC Diyalog & Bağlam Kompaktörü
         </button>
-        <button class="tab-btn" id="btn-tab-mcts" onclick="switchTab('tab-mcts', this)">
+        <button class="tab-btn" id="btn-tab-mcts" onclick="switchTab('tab-mcts', this)"
+            data-tech-title="MCTS Taktiksel Karar Ağacı & Yol Bulma"
+            data-tech-patent="Idempotent Tactical Tree Pruning"
+            data-tech-pkg="idempotent-game-ai, idempotent-solver"
+            data-tech-core="Monte Carlo Tree Search, UCB1 Selection, Idempotent State Hashing"
+            data-tech-gain="50,000 Simülasyon/sn, Gerçek Zamanlı Taktiksel AI, Çıkmaz Yol Eliminasyonu"
+            data-tech-desc="Strateji ve taktiksel oyunlarda birimlerin hamle kombinasyonlarını idempotent durum özetleme ile budar; döngüsel veya eşdeğer durumları tek adımda birleştirir.">
             <span>🎯</span> 4. MCTS Taktiksel Karar Ağacı & Yol Bulma
         </button>
     </div>
@@ -2414,6 +2510,74 @@
                 }
             });
         }
+
+        // -----------------------------------------------------------------------------
+        // Universal Idem Tech Tooltip Engine
+        // -----------------------------------------------------------------------------
+        function initIdemTechTooltips() {
+            let tooltip = document.getElementById("idem-tech-tooltip");
+            if (!tooltip) {
+                tooltip = document.createElement("div");
+                tooltip.id = "idem-tech-tooltip";
+                document.body.appendChild(tooltip);
+            }
+
+            const targets = document.querySelectorAll("[data-tech-title]");
+            targets.forEach(el => {
+                el.addEventListener("mouseenter", (e) => {
+                    const title = el.getAttribute("data-tech-title") || "";
+                    const patent = el.getAttribute("data-tech-patent") || "";
+                    const pkg = el.getAttribute("data-tech-pkg") || "";
+                    const core = el.getAttribute("data-tech-core") || "";
+                    const gain = el.getAttribute("data-tech-gain") || "";
+                    const desc = el.getAttribute("data-tech-desc") || "";
+
+                    tooltip.innerHTML = `
+                        <div class="idem-tt-header">
+                            <div class="idem-tt-title">${title}</div>
+                            ${patent ? `<span class="idem-tt-badge-patent">${patent}</span>` : ""}
+                        </div>
+                        <div class="idem-tt-meta">
+                            ${pkg ? `<div class="idem-tt-row"><span class="idem-tt-label">📦 Paket:</span><span class="idem-tt-val">${pkg}</span></div>` : ""}
+                            ${core ? `<div class="idem-tt-row"><span class="idem-tt-label">⚡ Çekirdek:</span><span class="idem-tt-val">${core}</span></div>` : ""}
+                            ${gain ? `<div class="idem-tt-row"><span class="idem-tt-label">🏆 Kazanım:</span><span class="idem-tt-val">${gain}</span></div>` : ""}
+                        </div>
+                        ${desc ? `<div class="idem-tt-desc">${desc}</div>` : ""}
+                    `;
+
+                    tooltip.style.display = "block";
+                    positionTooltip(e);
+                });
+
+                el.addEventListener("mousemove", (e) => {
+                    positionTooltip(e);
+                });
+
+                el.addEventListener("mouseleave", () => {
+                    tooltip.style.display = "none";
+                });
+            });
+
+            function positionTooltip(e) {
+                const padding = 16;
+                let x = e.clientX + padding;
+                let y = e.clientY + padding;
+
+                const ttWidth = tooltip.offsetWidth || 360;
+                const ttHeight = tooltip.offsetHeight || 200;
+
+                if (x + ttWidth > window.innerWidth - 10) {
+                    x = e.clientX - ttWidth - padding;
+                }
+                if (y + ttHeight > window.innerHeight - 10) {
+                    y = e.clientY - ttHeight - padding;
+                }
+
+                tooltip.style.left = `${Math.max(10, x)}px`;
+                tooltip.style.top = `${Math.max(10, y)}px`;
+            }
+        }
+        window.addEventListener('DOMContentLoaded', initIdemTechTooltips);
     </script>
 </body>
 </html>
