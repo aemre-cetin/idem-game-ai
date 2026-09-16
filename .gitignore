@@ -10,3 +10,21 @@ patent/
 
 paper/*patent*
 paper/*PATENT*
+
+# ==============================================================================
+# PERSONAL & INTERNAL MARKDOWN EXCLUSIONS (STRICT REPO PRIVACY)
+# ==============================================================================
+*.md
+!README.md
+!readme.md
+**/*.md
+!**/README.md
+!**/readme.md
+
+# Internal, personal and patent directories
+trash/
+**/trash/
+patent/
+**/patent/
+patent_supplemental_2026/
+**/patent_supplemental_2026/

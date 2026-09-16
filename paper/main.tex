@@ -1,4 +1,4 @@
-\documentclass[journal,10pt,twocolumn]{article}
+﻿\documentclass[journal,10pt,twocolumn]{article}
 \usepackage[utf8]{inputenc}
 \usepackage[margin=0.75in]{geometry}
 \usepackage{amsmath,amssymb,amsthm}
@@ -7,6 +7,7 @@
 \usepackage{algorithm}
 \usepackage{algpseudocode}
 \usepackage{hyperref}
+\usepackage{lmodern}
 \usepackage{microtype}
 \usepackage{cite}
 
@@ -22,12 +23,12 @@
     urlcolor=blue
 }
 
-\title{\textbf{IdemSpatial: Deterministic $\mathcal{O}(N)$ In-Situ Spatial Partitioning and Volume-Preserving Swarm Dynamics via Idempotent Involutions with Zero Dynamic Allocation}}
+\title{\textbf{IdemSpatial: Deterministic $\mathcal{O}(N)$ In-Situ Spatial Partitioning and Volume-Preserving Swarm Dynamics via Idempotent Involutions with Zero Dynamic Allocation}\thanks{Preprint Notice: Published on ResearchGate (DOI: \href{https://doi.org/10.13140/RG.2.2.23188.67209}{10.13140/RG.2.2.23188.67209}) and submitted to open-access archives. Patent Protection: U.S. Patent Application No.~64/152,276 (``Patent Pending'', claiming priority under 35 U.S.C. \S 119(e) to U.S. Provisional Application No.~64/148,668, Conf. No.~5890).}}
 \author{
     \textbf{Dr. A. Emre \c{C}ET\.{I}N}\\
     \texttt{aemre.cetin@gmail.com}
 }
-\date{September 2026}
+\date{September 2026 \\ \vspace{0.3em} \small \textbf{Official Preprint DOI:} \href{https://doi.org/10.13140/RG.2.2.23188.67209}{\texttt{10.13140/RG.2.2.23188.67209}} $\;\cdot\;$ \textbf{ResearchGate \& arXiv}}
 
 \begin{document}
 
@@ -46,7 +47,7 @@ Real-time simulation of large-scale agent collectives (such as battlefield infan
 
 Traditional physics and navigation engines attempt to mitigate this complexity via spatial acceleration trees or dynamic hash buckets. However, in managed game runtimes (e.g., Roblox Luau or Unity C\# Mono/IL2CPP), re-allocating dynamic bucket collections on every simulation frame creates immense garbage generation, triggering periodic garbage collector sweeps that stall gameplay execution for up to $100\,\text{ms}$.
 
-In this paper, we present \textbf{IdemSpatial}, an algebraic in-situ spatial partitioning and collision manifold projection framework protected under \textbf{U.S. Patent Application No. 64/148,668}. IdemSpatial provides exact $\mathcal{O}(N)$ computational complexity and strictly $0\,\text{Bytes}$ of dynamic heap allocation.
+In this paper, we present \textbf{IdemSpatial}, an algebraic in-situ spatial partitioning and collision manifold projection framework protected under \textbf{U.S. Patent Application No. 64/152,276} (Priority Application No. 64/148,668). IdemSpatial provides exact $\mathcal{O}(N)$ computational complexity and strictly $0\,\text{Bytes}$ of dynamic heap allocation.
 
 \section{Mathematical Formulation}
 
@@ -118,7 +119,7 @@ Dynamic Heap Alloc & 0 B & 3,840 KB / frame & \textbf{0 Bytes (0 GC)} \\
 \end{table}
 
 \section{Patent and Legal Notice}
-The systems, mathematical formulations, and algorithmic architectures disclosed herein are protected under \textbf{U.S. Patent Application No. 64/148,668} (Confirmation No. 5890, Priority Date: September 4, 2026). Commercial licensing inquiries should be addressed to Dr. A. Emre \c{C}ET\.{I}N.
+The systems, mathematical formulations, and algorithmic architectures disclosed herein are protected under \textbf{U.S. Patent Application No. 64/152,276} (claiming priority to U.S. Provisional Application No. 64/148,668, Confirmation No. 5890). Commercial licensing inquiries should be addressed to Dr. A. Emre \c{C}ET\.{I}N.
 
 \section*{Acknowledgment}
 The author gratefully acknowledges the assistance of advanced agentic AI pair-programming tools (Google Antigravity / Gemini) for engineering support in C++20/CUDA kernel optimization, automated hardware benchmark harness scripting, and manuscript \LaTeX\ typesetting. The underlying mathematical theory of idempotent involution permutations ($f(f(x))=f(x)$, $\pi = \pi^{-1}$) and the foundational systems architectures originate from the author's prior theoretical work (A.~E. {\c{C}}etin, arXiv:1307.3877, arXiv:1301.2046). The author conceived the research design, verified all empirical results on physical hardware, and holds full responsibility for the scientific integrity, claims, and conclusions presented in this work.
